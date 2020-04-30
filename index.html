@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .imgbox {
+        display: grid;
+        height: 100%;
+    }
+    .center-fit {
+        max-width: 100%;
+        max-height: 100vh;
+        margin: auto;
+    }
+</style>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Total War Manager</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  
+    <!-- Custom styles for this page -->
+  <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+</head>
+
+<body id="page-top">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+				<!-- Begin Page Content -->
+				<div class="container-fluid">
+					<center>
+						<font size="100">Total War Manager</font>
+					</center>
+					
+					<!--
+					<div class="imgbox">
+						<img class="center-fit" src='img/Map of Europe.PNG'><br>
+					</div>
+					-->
+					
+					<div class="row">
+					
+						<!---Faction--->
+						<div class="col-lg-4">
+							
+							<div class="card shadow mb-4">
+								<!-- Card Header - Accordion -->
+								<a href="#collapseFaction" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+								  <h6 class="m-0 font-weight-bold text-primary">Faction Inputs</h6>
+								</a>
+								<!-- Card Content - Collapse -->
+								<div class="collapse" id="collapseFaction">
+									<div class="card-body">
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addFaction">
+													<center>
+														<font size="5">Insert Faction</font>
+													</center>
+													
+													<label for="name">Faction name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="frel">Faction religion:</label>
+													<input type="text" id="frel" name="frel"><br>
+													
+													<!--
+													<label for="fpop">Faction population:</label>
+													<input type="text" id="fpop" name="fpop"><br>
+													-->
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+									
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addRelation">
+													<center>
+														<font size="5">Update Faction Relations</font>
+													</center>
+													
+													<label for="name1">Faction name 1:</label>
+													<input type="text" id="name1" name="name1"><br>
+													<label for="name2">Faction name 2:</label>
+													<input type="text" id="name2" name="name2"><br>
+													Relation:
+													<input type="radio" id="war" name="rel" value="war">
+													<label for="war">At War</label>
+													<input type="radio" id="ally" name="rel" value="ally">
+													<label for="ally">Allied</label>
+													<input type="radio" id="neutral" name="rel" value="neutral">
+													<label for="ally">Neutral</label><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/updateFaction">
+													<center>
+														<font size="5">Update Faction Religion</font>
+													</center>
+													
+													<label for="name">Faction name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="frel">Faction religion:</label>
+													<input type="text" id="frel" name="frel"><br>
+													
+													<!--
+													<label for="fpop">Faction population:</label>
+													<input type="text" id="fpop" name="fpop"><br>
+													-->													
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/remFaction">
+													<center>
+														<font size="5">Remove Faction</font>
+													</center>
+													
+													<label for="name">Faction name:</label>
+													<input type="text" id="name" name="name"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!---Settlement--->
+						<div class="col-lg-4">
+							
+							<div class="card shadow mb-4">
+								<!-- Card Header - Accordion -->
+								<a href="#collapseSettlement" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+								  <h6 class="m-0 font-weight-bold text-primary">Settlement Inputs</h6>
+								</a>
+								<!-- Card Content - Collapse -->
+								<div class="collapse" id="collapseSettlement">
+									<div class="card-body">
+							
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addCity">
+													<center>
+														<font size="5">Insert City</font>
+													</center>
+													
+													<label for="name">City name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="ctax">City taxes:</label>
+													<input type="text" id="ctax" name="ctax"><br>
+													<label for="cpop">City population:</label>
+													<input type="text" id="cpop" name="cpop"><br>
+													<label for="cfact">Controlling Faction:</label>
+													<input type="text" id="cfact" name="cfact"><br>
+													<label for="date">Date Built:</label>
+													<input type="text" id="date" name="date"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addStronghold">
+													<center>
+														<font size="5">Insert Stronghold</font>
+													</center>
+													
+													<label for="name">Stronghold name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="numunit">Number of garrisoned units:</label>
+													<input type="text" id="numunit" name="numunit"><br>
+													<label for="spop">Stronghold population:</label>
+													<input type="text" id="spop" name="spop"><br>
+													<label for="cfact">Controlling Faction:</label>
+													<input type="text" id="cfact" name="cfact"><br>
+													<label for="date">Date Built:</label>
+													<input type="text" id="date" name="date"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addSmith">
+													<center>
+														<font size="5">Add Smith to Settlement</font>
+													</center>
+													
+													<label for="name">Settlement name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="bname">Building name:</label>
+													<input type="text" id="bname" name="bname"><br>
+													<label for="type">Type of Smiths:</label>
+													<input type="text" id="type" name="type"><br>
+													Structural Integrity:
+													<input type="radio" id="good" name="int" value="good">
+													<label for="good">Good</label>
+													<input type="radio" id="damaged" name="int" value="damaged">
+													<label for="damaged">Damaged</label>
+													<input type="radio" id="destroyed" name="int" value="destroyed">
+													<label for="destroyed">Destroyed</label><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addMine">
+													<center>
+														<font size="5">Add Mine to Settlement</font>
+													</center>
+													
+													<label for="name">Settlement name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="bname">Building name:</label>
+													<input type="text" id="bname" name="bname"><br>
+													<label for="type">Resource Mined:</label>
+													<input type="text" id="type" name="type"><br>
+													Structural Integrity:
+													<input type="radio" id="good" name="int" value="good">
+													<label for="good">Good</label>
+													<input type="radio" id="damaged" name="int" value="damaged">
+													<label for="damaged">Damaged</label>
+													<input type="radio" id="destroyed" name="int" value="destroyed">
+													<label for="destroyed">Destroyed</label><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addFarm">
+													<center>
+														<font size="5">Add Farm to Settlement</font>
+													</center>
+													
+													<label for="name">Settlement name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="bname">Building name:</label>
+													<input type="text" id="bname" name="bname"><br>
+													<label for="type">Food Produced:</label>
+													<input type="text" id="type" name="type"><br>
+													Structural Integrity:
+													<input type="radio" id="good" name="int" value="good">
+													<label for="good">Good</label>
+													<input type="radio" id="damaged" name="int" value="damaged">
+													<label for="damaged">Damaged</label>
+													<input type="radio" id="destroyed" name="int" value="destroyed">
+													<label for="destroyed">Destroyed</label><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/updateOwnership">
+													<center>
+														<font size="5">Change Settlement Ownership</font>
+													</center>
+													
+													<label for="name">Settlement name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="new">New Owner Faction:</label>
+													<input type="text" id="new" name="new"><br>
+													<label for="date">Date Conquered:</label>
+													<input type="text" id="date" name="date"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addRoad">
+													<center>
+														<font size="5">Add Road</font>
+													</center>
+													
+													<label for="name1">Starting Settlement name:</label>
+													<input type="text" id="name1" name="name1"><br>
+													<label for="name2">Ending Settlement name:</label>
+													<input type="text" id="name2" name="name2"><br>
+													<label for="length">Road Length:</label>
+													<input type="text" id="length" name="length"><br>
+													
+													Road Quality:
+													<input type="radio" id="roadQ" name="roadQ" value="good">
+													<label for="good">Good</label>
+													<input type="radio" id="roadQ" name="roadQ" value="damaged">
+													<label for="damaged">Damaged</label>
+													<input type="radio" id="roadQ" name="roadQ" value="destroyed">
+													<label for="destroyed">Destroyed</label><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/removeRoad">
+													<center>
+														<font size="5">Remove Road</font>
+													</center>
+													
+													<label for="name1">Starting Settlement name:</label>
+													<input type="text" id="name1" name="name1"><br>
+													<label for="name2">Ending Settlement name:</label>
+													<input type="text" id="name2" name="name2"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!---Military--->
+						<div class="col-lg-4">
+							
+							<div class="card shadow mb-4">
+								<!-- Card Header - Accordion -->
+								<a href="#collapseMilitary" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
+								  <h6 class="m-0 font-weight-bold text-primary">Military Inputs</h6>
+								</a>
+								<!-- Card Content - Collapse -->
+								<div class="collapse" id="collapseMilitary">
+									<div class="card-body">
+							
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addArmy">
+													<center>
+														<font size="5">Insert Army</font>
+													</center>
+													
+													<label for="name">Army name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="numunit">Number of units:</label>
+													<input type="text" id="numunit" name="numunit"><br>
+													<label for="numhorse">Number of horses:</label>
+													<input type="text" id="numhorse" name="numhorse"><br>
+													<label for="cfact">Controlling Faction:</label>
+													<input type="text" id="cfact" name="cfact"><br>
+													<label for="gar">Garrisoned:</label>
+													<input type="text" id="gar" name="gar"><br>
+													(Enter a settlement or NULL if in the field.)
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addNavy">
+													<center>
+														<font size="5">Insert Navy</font>
+													</center>
+													
+													<label for="name">Navy name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="numunit">Number of units:</label>
+													<input type="text" id="numunit" name="numunit"><br>
+													<label for="numship">Number of ships:</label>
+													<input type="text" id="numship" name="numship"><br>
+													<label for="cfact">Controlling Faction:</label>
+													<input type="text" id="cfact" name="cfact"><br>
+													<label for="gar">Garrisoned:</label>
+													<input type="text" id="gar" name="gar"><br>
+													(Enter a settlement or NULL if in the field.)
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/addBattle">
+													<center>
+														<font size="5">Insert Battle</font>
+													</center>
+													
+													<label for="name1">Attacking Army:</label>
+													<input type="text" id="name1" name="name1"><br>
+													<label for="name2">Defending Army:</label>
+													<input type="text" id="name2" name="name2"><br>
+													<label for="attloss">Attacker Lossses:</label>
+													<input type="text" id="attloss" name="attloss"><br>
+													<label for="defloss">Defender Lossses:</label>
+													<input type="text" id="defloss" name="defloss"><br>
+													<label for="victor">Victor:</label>
+													<input type="text" id="victor" name="victor"><br>
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/moveMilitary">
+													<center>
+														<font size="5">Move Military Force</font>
+													</center>
+													
+													<label for="name">Military Force Name:</label>
+													<input type="text" id="name" name="name"><br>
+													<label for="loc">New Location:</label>
+													<input type="text" id="loc" name="loc"><br>
+													 (Enter a new settlement or NULL if in the field.)
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>					
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Faction Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="factionTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Name</th>
+										  <th>Allied With:</th>
+										  <th>At War With:</th>
+										  <th>Religion</th>
+										  <th>Population</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<tr>
+										  <td>Roman Empire</td>
+										  <td>Byzantine Empire</td>
+										  <td>Egypt</td>
+										  <td>Christian</td>
+										  <td>100,000</td>
+										</tr>
+										<tr>
+										  <td>Byzantine Empire</td>
+										  <td>Roman Empire</td>
+										  <td>Egypt, Persian Empire</td>
+										  <td>Orthodox</td>
+										  <td>111,000</td>
+										</tr>
+										<tr>
+										  <td>Persian Empire</td>
+										  <td>Egypt</td>
+										  <td>Byzantine Empire</td>
+										  <td>Islam</td>
+										  <td>150,000</td>
+										</tr>
+										<tr>
+										  <td>Egypt</td>
+										  <td>Persian Empire</td>
+										  <td>Byzantine Empire, Rome</td>
+										  <td>Islam</td>
+										  <td>75,000</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">City Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="cityTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Name</th>
+										  <th>Taxes</th>
+										  <th>Population</th>
+										  <th>Controlled by</th>
+										  <th>Strategic Resources</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<tr>
+										  <td>Rome</td>
+										  <td>1,000</td>
+										  <td>10,000</td>
+										  <td>Roman Empire</td>
+										  <th>Gold, Sword Smiths, Sheep, Grain</th>
+										</tr>
+										<tr>
+										  <td>Constantinople</td>
+										  <td>950</td>
+										  <td>11,000</td>
+										  <td>Byzantine Empire</td>
+										  <th>Gold, Sword Smiths, Sheep, Grain</th>
+										</tr>
+										<tr>
+										  <td>Babylon</td>
+										  <td>1,100</td>
+										  <td>15,000</td>
+										  <td>Persian Empire</td>
+										  <th>Gold, Sword Smiths, Sheep, Grain</th>
+										</tr>
+										<tr>
+										  <td>Cairo</td>
+										  <td>1,000</td>
+										  <td>7,000</td>
+										  <td>Egypt</td>
+										  <th>Gold, Sword Smiths, Sheep, Grain</th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Stronghold Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="strongholdTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Name</th>
+										  <th>Garrisoned Units</th>
+										  <th>Population</th>
+										  <th>Controlled by</th>
+										  <th>Strategic Resources</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<tr>
+										  <td>Castra</td>
+										  <td>1,000</td>
+										  <td>10,000</td>
+										  <td>Roman Empire</td>
+										  <th>Weapon Smiths, Armor Smiths</th>
+										</tr>
+										<tr>
+										  <td>Angelokastro</td>
+										  <td>950</td>
+										  <td>11,000</td>
+										  <td>Byzantine Empire</td>
+										  <th>Weapon Smiths, Armor Smiths</th>
+										</tr>
+										<tr>
+										  <td>Izad-Khast</td>
+										  <td>1,100</td>
+										  <td>15,000</td>
+										  <td>Persian Empire</td>
+										  <th>Weapon Smiths, Armor Smiths</th>
+										</tr>
+										<tr>
+										  <td>Fortress of Abydos</td>
+										  <td>1,000</td>
+										  <td>7,000</td>
+										  <td>Egypt</td>
+										  <th>Weapon Smiths, Armor Smiths</th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Road Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="roadTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Starting Settlement</th>
+										  <th>Destination Settlement</th>
+										  <th>Length (km)</th>
+										  <th>Road Quality</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<tr>
+										  <td>Castra</td>
+										  <td>Constantinople</td>
+										  <td>50</td>
+										  <td>Good</td>
+										</tr>
+										<tr>
+										  <td>Angelokastro</td>
+										  <td>Constantinople</td>
+										  <td>45</td>
+										  <td>Good</td>
+										</tr>
+										<tr>
+										  <td>Rome</td>
+										  <td>Constantinople</td>
+										  <td>95</td>
+										  <td>Good</td>
+										</tr>
+										<tr>
+										  <td>Fortress of Abydos</td>
+										  <td>Cairo</td>
+										  <td>50</td>
+										  <td>Good</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Military Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="militaryTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Name</th>
+										  <th>Type</th>
+										  <th>Number of Units</th>
+										  <th>Number of Horses/Ships</th>
+										  <th>Controlled by</th>
+										  <th>Location</th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										<tr>
+										  <td>Legio V Alaudae</td>
+										  <td>Army</td>
+										  <td>1,000</td>
+										  <td>100</td>
+										  <th>Roman Empire</th>
+										  <th>Rome</th>
+										</tr>
+										<tr>
+										  <td>Komnenian Army</td>
+										  <td>Army</td>
+										  <td>750</td>
+										  <td>100</td>
+										  <th>Byzantine Empire</th>
+										  <th>Constantinople</th>
+										</tr>
+										<tr>
+										  <td>The Immortals</td>
+										  <td>Islam</td>
+										  <td>150,000</td>
+										  <td>100</td>
+										  <th>Persian Empire</th>
+										  <th>Location</th>
+										</tr>
+										<tr>
+										  <td>First Fleet</td>
+										  <td>Navy</td>
+										  <td>750</td>
+										  <td>100</td>
+										  <th>Egypt</th>
+										  <th>Port of Cayro</th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- End of Main Content -->
+		</div>
+		<!-- End of Content Wrapper -->
+	</div>
+	<!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>
