@@ -27,8 +27,11 @@ app.post('/addFaction', function(request, response){
 	var query = 'INSERT INTO FACTION (fName, religion) VALUES(?, ?);';
 	
 	connection.query(query, [factionName, factionRel], function(error, result, fields){
-		if(error) throw error;
-		console.log(result);
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 }
@@ -38,32 +41,53 @@ app.post('/addFaction', function(request, response){
 app.post('/addRelation', function(request, response){
 	var name1 = request.body.name1;
 	var name2 = request.body.name2;
-	var query;	
+	var query;
 	
-	var state;//assumed that only 1 state is not null and rest are null
 	if(request.body.war != NULL){
-		state = request.body.war;
-		query = 'INSERT INTO AT_WAR (fName_1, fName_2) VALUES(?, ?);'
+		query = 'INSERT INTO AT_WAR VALUES(?, ?);';
 	}else if(request.body.ally !=NULL){
-		state = request.body.ally;
-		query = 'INSERT INTO ALLIED (fName_1, fName_2) VALUES(?, ?);'
-	}else if(request.body.neutral !=NULL){
-		state = request.body.neutral;
-	}
-	//if possible, 
-	if(state != NULL){
+		query = 'INSERT INTO ALLIED VALUES(?, ?);';
+	}else if(request.body.neutral != NULL){
+		query = 'SELECT FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
+
 		connection.query(query, [name1, name2], function(error, result, fields){
-			if(error) throw error;
-			//if(getstate = null) then write to screen that something needs to be entered
+			if(result != NULL){
+				var newQuery = 'DELETE FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
+				connection.query(newQuery, [name1, name2], function(error, result, fields){
+					if(error){
+						console.log(error);
+					}else{
+						console.log(result);
+					}
+				}
+				);
+	
+			}else{
+				var newQuery = 'DELETE FROM ALLIED WHERE fname1 = ? AND fname2 = ?;';
+				connection.query(newQuery, [name1, name2], function(error, result, fields){
+					if(error){
+						console.log(error);
+					}else{
+						console.log(result);
+					}
+				}
+				);
+				
+			}//end if-else
 		}
 		);
-	}else{
-		//if the above comment doesnt work then do it in this else bracket
+		return;
+	}//end else-if
+	
+	//
+	connection.query(query, [name1, name2], function(error, result, fields){
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
-	
-	
-
-	
+	);
 }
 );
 
@@ -73,8 +97,11 @@ app.post('/updateFaction', function(request, response){
 	var query = 'UPDATE FACTION SET religion=? WHERE fName = ?;';
 	
 	connection.query(query, [factionRel, factionName], function(error, result, fields){
-		if(error) throw error;
-		console.log(result);
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 	
@@ -87,8 +114,11 @@ app.post('/remFaction', function(request, response){
 	var factionName = request.body.name;
 	var query = 'DELETE FROM table_name WHERE name = ?);';
 	connection.query(query, [factionName], function(error, result, fields){
-		if(error) throw error;
-		console.log(result);
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 }
@@ -104,8 +134,11 @@ app.post('/addCity', function(request, response){
 	var date = request.body.date;
 	var query = 'INSERT INTO SETTLEMENT (sName, Population, taxesCollected, controlledBy, date_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);'; 		//column names might need updating depending on SQL table
 	connection.query(query, [cityName, cityPopulation, cityTax, cityFaction, date, 'C'], function(error, result, fields){
-		if(error) throw error;
-		console.log(result);
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		};
 	}
 	);
 }
@@ -120,8 +153,11 @@ app.post('/addStronghold', function(request, response){
 	var date = request.body.date;
 	var query = 'INSERT INTO SETTLEMENT (sName, Population, Garrison_Unit_Count, controlledBy, date_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);';		//column names might need updating depending on SQL table
 	connection.query(query, [strongholdName, strongholdPop, numOfGar, controllingFac, date, 'S'], function(error, result, fields){
-		if(error) throw error;
-		console.log(result);
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 }
@@ -147,7 +183,11 @@ app.post('/addSmith', function(request, response){
 	//if possible, 
 	if(state != NULL){
 		connection.query(query, [settlementName, bName, state, smithType], function(error, result, fields){
-			if(error) throw error;
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
@@ -176,7 +216,11 @@ app.post('/addMine', function(request, response){
 	//if possible, 
 	if(state != NULL){
 		connection.query(query, [settlementName, bName, state, mineType], function(error, result, fields){
-			if(error) throw error;
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
@@ -205,7 +249,11 @@ app.post('/addFarm', function(request, response){
 	//if possible, 
 	if(state != NULL){
 		connection.query(query, [settlementName, bName, state, farmType], function(error, result, fields){
-			if(error) throw error;
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
@@ -220,9 +268,13 @@ app.post('/updateOwnership', function(request, response){
 	var newFaction = request.body.new;
 	query = 'UPDATE SETTLEMENT SET controlledBy=? WHERE sName = ?;';		//might need column names updated based on SQL
 	connection.query(query, [newFaction, settlementName], function(error, result, fields){
-			if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
 		}
-		);
+	}
+	);
 }
 );
 
@@ -231,9 +283,13 @@ app.post('/removeRoad', function(request, response){
 	var road2 = request.body.name2;
 	query = 'DELETE FROM SETTLEMENT_ROAD WHERE sRoad = ? AND eRoad = ?;';
 	connection.query(query, [road1, road2], function(error, result, fields){
-			if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
 		}
-		);
+	}
+	);
 }
 );
 
@@ -246,7 +302,11 @@ app.post('addArmy', function(request, response){
 	
 	query = 'INSERT INTO MILITARY_FORCE (mName, unit_Count, cavalry_Count, ) VALUES(?,?,?,?,?)';
 	connection.query(query, [armyName, armyCount, armyHorseCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
-		if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 	
@@ -262,7 +322,11 @@ app.post('/addNavy', function(request, response){
 	
 	query = 'INSERT INTO table_name VALUES(?,?,?,?,?)';
 	connection.query(query, [navyName, navyCount, navyShipCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
-		if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 	
@@ -278,7 +342,11 @@ app.post('/addBattle', function(request, response){
 	
 	query = 'INSERT INTO table_name VALUES(?,?,?,?,?)';
 	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss], function(error, result, fields){
-		if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 	
@@ -290,7 +358,11 @@ app.post('/moveMilitary', function(request, response){
 	
 	query = 'INSERT INTO table_name VALUES(?,?)';
 	connection.query(query, [forceName, forceLoc], function(error, result, fields){
-		if(error) throw error;
+		if(error){
+			console.log(error);
+		}else{
+			console.log(result);
+		}
 	}
 	);
 	
