@@ -9,7 +9,7 @@ var app = express();
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '', 	//enter root PW here
+	password: '1379', 	//enter root PW here
 	database: 'TotalWarDB'
 }
 );
@@ -33,7 +33,7 @@ app.get('/TotalWarManager', function(request, response){
 app.post('/addFaction', function(request, response){
 	var factionName = request.body.name;
 	var factionRel = request.body.frel;
-	var query = 'INSERT INTO FACTION (fName, total_population, religion) VALUES(?, 0, ?);';
+	var query = 'INSERT INTO FACTION (faction_Name, total_Faction_Population, religion) VALUES(?, 0, ?);';
 	
 	if (factionName != null && factionRel != null)
 	{
@@ -60,11 +60,11 @@ app.post('/addRelation', function(request, response){
 	{
 		if(request.body.rel == "war"){
 			
-			query = 'SELECT * FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+			query = 'SELECT * FROM ALLIED WHERE allied_Faction_Name_1 = ? AND allied_Faction_Name_2 = ? OR allied_Faction_Name_2 = ? AND allied_Faction_Name_1 = ?;';
 
 			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
 				if(result != null){
-					var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					var newQuery = 'DELETE FROM ALLIED WHERE allied_Faction_Name_1 = ? AND allied_Faction_Name_2 = ? OR allied_Faction_Name_2 = ? AND allied_Faction_Name_1 = ?;';
 					connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
 						if(error){
 							console.log(error);
@@ -78,15 +78,15 @@ app.post('/addRelation', function(request, response){
 			}
 			);
 			
-			query = 'INSERT INTO AT_WAR (fName_1, fName_2) VALUES(?, ?);';
+			query = 'INSERT INTO AT_WAR (warring_Faction_Name_1, warring_Faction_Name_2) VALUES(?, ?);';
 			
 		}else if(request.body.rel == "ally"){
 			
-			query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+			query = 'SELECT * FROM AT_WAR WHERE warring_Faction_Name_1 = ? AND warring_Faction_Name_2 = ? OR warring_Faction_Name_2 = ? AND warring_Faction_Name_1 = ?;';
 			
 			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
 				if(result != null){
-					var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					var newQuery = 'DELETE FROM AT_WAR WHERE warring_Faction_Name_1 = ? AND warring_Faction_Name_2 = ? OR warring_Faction_Name_2 = ? AND warring_Faction_Name_1 = ?;';
 					connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
 						if(error){
 							console.log(error);
@@ -100,21 +100,21 @@ app.post('/addRelation', function(request, response){
 			}
 			);
 			
-			query = 'INSERT INTO ALLIED (fName_1, fName_2) VALUES(?, ?);';
+			query = 'INSERT INTO ALLIED (allied_Faction_Name_1, allied_Faction_Name_2) VALUES(?, ?);';
 			
 		}else if(request.body.rel == "neutral"){
 			
-			query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+			query = 'SELECT * FROM AT_WAR WHERE warring_Faction_Name_1 = ? AND warring_Faction_Name_2 = ? OR warring_Faction_Name_2 = ? AND warring_Faction_Name_1 = ?;';
 
 			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
 				
 				//console.log(result);
 				
 				if(result.length != 0)			
-					var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					var newQuery = 'DELETE FROM AT_WAR WHERE warring_Faction_Name_1 = ? AND warring_Faction_Name_2 = ? OR warring_Faction_Name_2 = ? AND warring_Faction_Name_1 = ?;';
 				
 				else				
-					var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					var newQuery = 'DELETE FROM ALLIED WHERE allied_Faction_Name_1 = ? AND allied_Faction_Name_2 = ? OR allied_Faction_Name_2 = ? AND allied_Faction_Name_1 = ?;';
 				
 					
 				connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
@@ -148,7 +148,7 @@ app.post('/addRelation', function(request, response){
 app.post('/updateFaction', function(request, response){
 	var factionName = request.body.name;
 	var factionRel = request.body.frel;
-	var query = 'UPDATE FACTION SET religion=? WHERE fName = ?;';
+	var query = 'UPDATE FACTION SET religion=? WHERE faction_Name = ?;';
 	
 	if (factionName != null && factionRel != null)
 	{
@@ -167,7 +167,7 @@ app.post('/updateFaction', function(request, response){
 
 app.post('/remFaction', function(request, response){
 	var factionName = request.body.name;
-	var query = 'DELETE FROM FACTION WHERE fname = ?;';
+	var query = 'DELETE FROM FACTION WHERE faction_Name = ?;';
 	
 	if (factionName != null)
 	{
