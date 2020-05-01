@@ -80,7 +80,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addFaction">
+												<form action="/addFaction" method="post">
 													<center>
 														<font size="5">Insert Faction</font>
 													</center>
@@ -105,7 +105,7 @@
 									
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addRelation">
+												<form action="/addRelation" method="post">
 													<center>
 														<font size="5">Update Faction Relations</font>
 													</center>
@@ -115,12 +115,12 @@
 													<label for="name2">Faction name 2:</label>
 													<input type="text" id="name2" name="name2"><br>
 													Relation:
-													<input type="radio" id="war" name="rel" value="war">
+													<input type="radio" id="rel" name="rel" value="war">
 													<label for="war">At War</label>
-													<input type="radio" id="ally" name="rel" value="ally">
+													<input type="radio" id="rel" name="rel" value="ally">
 													<label for="ally">Allied</label>
-													<input type="radio" id="neutral" name="rel" value="neutral">
-													<label for="ally">Neutral</label><br>
+													<input type="radio" id="rel" name="rel" value="neutral">
+													<label for="neutral">Neutral</label><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -132,7 +132,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/updateFaction">
+												<form action="/updateFaction" method="post">
 													<center>
 														<font size="5">Update Faction Religion</font>
 													</center>
@@ -157,7 +157,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/remFaction">
+												<form action="/remFaction" method="post">
 													<center>
 														<font size="5">Remove Faction</font>
 													</center>
@@ -192,7 +192,7 @@
 							
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addCity">
+												<form action="/addCity" method="post">
 													<center>
 														<font size="5">Insert City</font>
 													</center>
@@ -205,7 +205,7 @@
 													<input type="text" id="cpop" name="cpop"><br>
 													<label for="cfact">Controlling Faction:</label>
 													<input type="text" id="cfact" name="cfact"><br>
-													<label for="date">Date Built:</label>
+													<label for="date">Date Built (YYYY-MM-DD) :</label>
 													<input type="text" id="date" name="date"><br>
 													
 													<center>
@@ -218,7 +218,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addStronghold">
+												<form action="/addStronghold" method="post">
 													<center>
 														<font size="5">Insert Stronghold</font>
 													</center>
@@ -244,7 +244,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addSmith">
+												<form action="/addSmith" method="post">
 													<center>
 														<font size="5">Add Smith to Settlement</font>
 													</center>
@@ -273,7 +273,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addMine">
+												<form action="/addMine" method="post">
 													<center>
 														<font size="5">Add Mine to Settlement</font>
 													</center>
@@ -302,7 +302,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addFarm">
+												<form action="/addFarm" method="post">
 													<center>
 														<font size="5">Add Farm to Settlement</font>
 													</center>
@@ -331,7 +331,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/updateOwnership">
+												<form action="/updateOwnership" method="post">
 													<center>
 														<font size="5">Change Settlement Ownership</font>
 													</center>
@@ -353,7 +353,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addRoad">
+												<form action="/addRoad" method="post">
 													<center>
 														<font size="5">Add Road</font>
 													</center>
@@ -383,7 +383,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/removeRoad">
+												<form action="/removeRoad" method="post">
 													<center>
 														<font size="5">Remove Road</font>
 													</center>
@@ -420,7 +420,7 @@
 							
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addArmy">
+												<form action="/addArmy" method="post">
 													<center>
 														<font size="5">Insert Army</font>
 													</center>
@@ -435,7 +435,16 @@
 													<input type="text" id="cfact" name="cfact"><br>
 													<label for="gar">Garrisoned:</label>
 													<input type="text" id="gar" name="gar"><br>
-													(Enter a settlement or NULL if in the field.)
+													(Enter a settlement or NULL if in the field.)<br>
+													
+													Morale:
+													<input type="radio" id="morale" name="morale" value="eager">
+													<label for="eager">Eager</label>
+													<input type="radio" id="morale" name="morale" value="fair">
+													<label for="fair">Fair</label>
+													<input type="radio" id="morale" name="morale" value="poor">
+													<label for="poor">Poor</label><br>
+													
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -447,7 +456,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addNavy">
+												<form action="/addNavy" method="post">
 													<center>
 														<font size="5">Insert Navy</font>
 													</center>
@@ -462,7 +471,15 @@
 													<input type="text" id="cfact" name="cfact"><br>
 													<label for="gar">Garrisoned:</label>
 													<input type="text" id="gar" name="gar"><br>
-													(Enter a settlement or NULL if in the field.)
+													(Enter a settlement or NULL if in the field.)<br>
+													
+													Morale:
+													<input type="radio" id="morale" name="morale" value="eager">
+													<label for="eager">Eager</label>
+													<input type="radio" id="morale" name="morale" value="fair">
+													<label for="fair">Fair</label>
+													<input type="radio" id="morale" name="morale" value="poor">
+													<label for="poor">Poor</label><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -474,7 +491,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/addBattle">
+												<form action="/addBattle" method="post">
 													<center>
 														<font size="5">Insert Battle</font>
 													</center>
@@ -500,7 +517,7 @@
 										
 										<div class="card mb-4 py-3 border-left-primary">
 											<div class="card-body">
-												<form action="/moveMilitary">
+												<form action="/moveMilitary" method="post">
 													<center>
 														<font size="5">Move Military Force</font>
 													</center>
@@ -510,6 +527,32 @@
 													<label for="loc">New Location:</label>
 													<input type="text" id="loc" name="loc"><br>
 													 (Enter a new settlement or NULL if in the field.)
+													
+													<center>
+														<input type="submit" value="Submit">
+													</center>
+													
+												</form>
+											</div>
+										</div>
+										
+										<div class="card mb-4 py-3 border-left-primary">
+											<div class="card-body">
+												<form action="/updateMorale" method="post">
+													<center>
+														<font size="5">Update Morale</font>
+													</center>
+													
+													<label for="name">Military Force Name:</label>
+													<input type="text" id="name" name="name"><br>
+													
+													New Morale:
+													<input type="radio" id="morale" name="morale" value="eager">
+													<label for="eager">Eager</label>
+													<input type="radio" id="morale" name="morale" value="fair">
+													<label for="fair">Fair</label>
+													<input type="radio" id="morale" name="morale" value="poor">
+													<label for="poor">Poor</label><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -743,6 +786,7 @@
 										  <th>Number of Horses/Ships</th>
 										  <th>Controlled by</th>
 										  <th>Location</th>
+										  <th>Morale</th>
 										</tr>
 									</thead>
 									
@@ -754,6 +798,7 @@
 										  <td>100</td>
 										  <th>Roman Empire</th>
 										  <th>Rome</th>
+										  <th>eager</th>
 										</tr>
 										<tr>
 										  <td>Komnenian Army</td>
@@ -762,6 +807,7 @@
 										  <td>100</td>
 										  <th>Byzantine Empire</th>
 										  <th>Constantinople</th>
+										  <th>eager</th>
 										</tr>
 										<tr>
 										  <td>The Immortals</td>
@@ -770,6 +816,7 @@
 										  <td>100</td>
 										  <th>Persian Empire</th>
 										  <th>Location</th>
+										  <th>eager</th>
 										</tr>
 										<tr>
 										  <td>First Fleet</td>
@@ -778,6 +825,7 @@
 										  <td>100</td>
 										  <th>Egypt</th>
 										  <th>Port of Cayro</th>
+										  <th>eager</th>
 										</tr>
 									</tbody>
 								</table>
