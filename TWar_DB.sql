@@ -170,7 +170,6 @@ CREATE TABLE SETTLEMENT_ROAD
     road_Between_Settlement_Name_2 VARCHAR(50) NOT NULL,
     road_Length_Between_Settlements INT NOT NULL,
     road_Quality SET ('none', 'dirt', 'paved', 'brick'),
-    travel_Time TIME,
     CONSTRAINT road_Between_Settlements_Name_pk
         PRIMARY KEY (road_Between_Settlement_Name_1,
                         road_Between_Settlement_Name_2),
