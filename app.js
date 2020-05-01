@@ -6,7 +6,7 @@ var path = require ('path');
 var app = express();
 
 
-var connection = mysql.createConnection({
+var db = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
 	password: '1379', 	//enter root PW here
@@ -30,15 +30,51 @@ app.get('/TotalWarManager', function(request, response){
 }
 );
 
-app.get('/populateFactionTable', function(req,res){
+app.get('/populateFactionTable', (req, res, next) => {
 
-    var query = "select *  from Faction;";
+    const requestQuery = req.query;
+	/**
+	* This is array of objects which maps 
+	* the database columns with the Datatables columns
+	* db - represents the exact name of the column in your table
+	* dt - represents the order in which you want to display your fetched values
+	* If your want any column to display in your datatable then
+	* you have to put an enrty in the array , in the specified format
+	* carefully setup this structure to avoid any errors
+	*/
+	let columnsMap = [
+    {
+		db: "faction_Name",
+		dt: 0
+    },
+    {
+		db: "religion",
+		dt: 1
+    },
+    {
+		db: "total_Faction_Population",
+		dt: 2
+    }
+	];
+	// our database table name
+	const tableName = "Faction"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "faction_Name"
+  
+	const nodeTable = new NodeTable(requestQuery, db, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
 	
-	var result = [["Rome", "Egypt", "Persian Empire", "Christianity", "10,000"]];
-	
-	result = JSON.stringify(result);
-	
-	return res.send(result);
 });
 
 app.post('/addFaction', function(request, response){
