@@ -30,6 +30,17 @@ app.get('/TotalWarManager', function(request, response){
 }
 );
 
+app.get('/populateFactionTable', function(req,res){
+
+    var query = "select *  from Faction;";
+	
+	var result = [["Rome", "Egypt", "Persian Empire", "Christianity", "10,000"]];
+	
+	result = JSON.stringify(result);
+	
+	return res.send(result);
+});
+
 app.post('/addFaction', function(request, response){
 	var factionName = request.body.name;
 	var factionRel = request.body.frel;
@@ -192,7 +203,7 @@ app.post('/addCity', function(request, response){
 	var cityFaction = request.body.cfact;
 	var cityTax = request.body.ctax;
 	var date = request.body.date;
-	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, city_Taxes_Collected, controlled_By_Faction_Name, faction_Date_Settlement_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);'; 		//column names might need updating depending on SQL table
+	var query = 'INSERT INTO SETTLEMENT (sName, Population, taxesCollected, controlledBy, date_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);'; 		//column names might need updating depending on SQL table
 	connection.query(query, [cityName, cityPopulation, cityTax, cityFaction, date, 'C'], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -211,7 +222,7 @@ app.post('/addStronghold', function(request, response){
 	var strongholdPop = request.body.spop;
 	var controllingFac = request.body.cfact;
 	var date = request.body.date;
-	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, stronghold_Garrison_Unit_Count, controlled_By_Faction_Name, faction_Date_Settlement_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);';		//column names might need updating depending on SQL table
+	var query = 'INSERT INTO SETTLEMENT (sName, Population, Garrison_Unit_Count, controlledBy, date_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);';		//column names might need updating depending on SQL table
 	connection.query(query, [strongholdName, strongholdPop, numOfGar, controllingFac, date, 'S'], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -230,7 +241,7 @@ app.post('/addSmith', function(request, response){
 	var smithType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, smith_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (sName, sB_Name, structural_Integrity, smithType) VALUES(?, ?, ? , ?);';
 	
 	
 	if(request.body.good != NULL){
@@ -251,6 +262,8 @@ app.post('/addSmith', function(request, response){
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
+	}else{
+		//if the above comment doesnt work then do it in this else bracket
 	}
 }
 );
@@ -261,7 +274,7 @@ app.post('/addMine', function(request, response){
 	var mineType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, resource_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (sName, sB_Name, structural_Integrity, resourceType) VALUES(?, ?, ? , ?);';
 	
 	
 	if(request.body.good != NULL){
@@ -282,6 +295,8 @@ app.post('/addMine', function(request, response){
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
+	}else{
+		//if the above comment doesnt work then do it in this else bracket
 	}
 }
 );
@@ -292,7 +307,7 @@ app.post('/addFarm', function(request, response){
 	var farmType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, food_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (sName, sB_Name, structural_Integrity, foodType) VALUES(?, ?, ? , ?);';
 	
 	
 	if(request.body.good != NULL){
@@ -313,13 +328,16 @@ app.post('/addFarm', function(request, response){
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
+	}else{
+		//if the above comment doesnt work then do it in this else bracket
 	}
+}
 );
 
 app.post('/updateOwnership', function(request, response){
 	var settlementName = request.body.name;
 	var newFaction = request.body.new;
-	query = 'UPDATE SETTLEMENT SET controlled_By_Faction_Name=? WHERE settlement_Name = ?;';		//might need column names updated based on SQL
+	query = 'UPDATE SETTLEMENT SET controlledBy=? WHERE sName = ?;';		//might need column names updated based on SQL
 	connection.query(query, [newFaction, settlementName], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -334,7 +352,7 @@ app.post('/updateOwnership', function(request, response){
 app.post('/removeRoad', function(request, response){
 	var road1 = request.body.name1;
 	var road2 = request.body.name2;
-	query = 'DELETE FROM SETTLEMENT_ROAD WHERE road_Between_Settlement_Name_1 = ? AND road_Between_Settlement_Name_2 = ?;';
+	query = 'DELETE FROM SETTLEMENT_ROAD WHERE sRoad = ? AND eRoad = ?;';
 	connection.query(query, [road1, road2], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -353,7 +371,7 @@ app.post('addArmy', function(request, response){
 	var controllingFaction = request.body.cfact;
 	var numOfGarrisoned = request.body.gar;
 	
-	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, faction_Army_Cavalry_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name) VALUES(?,?,?,?,?);';
+	query = 'INSERT INTO MILITARY_FORCE (mName, unit_Count, cavalry_Count, ) VALUES(?,?,?,?,?)';
 	connection.query(query, [armyName, armyCount, armyHorseCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -373,7 +391,7 @@ app.post('/addNavy', function(request, response){
 	var controllingFaction = request.body.cfact;
 	var numOfGarrisoned = request.body.gar;
 	
-	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, navy_Ship_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name) VALUES(?,?,?,?,?);';
+	query = 'INSERT INTO table_name VALUES(?,?,?,?,?)';
 	connection.query(query, [navyName, navyCount, navyShipCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -393,7 +411,7 @@ app.post('/addBattle', function(request, response){
 	var defLoss = request.body.defloss;
 	var victor = request.body.victor;
 	
-	query = 'INSERT INTO BATTLED (battling_Military_Force_Name_1, battling_Military_Force_Name_2, victor_Faction_Name, attacking_Military_Force_Name_Losses, defending_Military_Force_Name_Losses) VALUES(?,?,?,?,?);';
+	query = 'INSERT INTO table_name VALUES(?,?,?,?,?)';
 	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss], function(error, result, fields){
 		if(error){
 			console.log(error);
@@ -409,8 +427,8 @@ app.post('/moveMilitary', function(request, response){
 	var forceName = request.body.name;
 	var forceLoc = request.body.loc;
 	
-	query = 'UPDATE MILITARY_FORCE SET garrisoned_At_Settlement_Name = ? WHERE military_Force_Name = ?;';
-	connection.query(query, [forceLoc, forceName], function(error, result, fields){
+	query = 'INSERT INTO table_name VALUES(?,?)';
+	connection.query(query, [forceName, forceLoc], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
@@ -426,13 +444,15 @@ app.post('/updateMorale', function(request, response){
 	var forceName = request.body.name;
 	var state = request.body.morale;
 	
-	query = 'UPDATE MILITARY_FORCE SET morale = ? WHERE military_Force_Name = ?;';
+	query = 'UPDATE MILITARY_FORCE  ';
 	if(state != NULL && forceName != NULL){
-		connection.query(query, [state, forceName], function(error, result, fields){
+		connection.query(query, [], function(error, result, fields){
 			if(error) throw error;
 			//if(getstate = null) then write to screen that something needs to be entered
 		}
 		);
+	}else{
+		//if the above comment doesnt work then do it in this else bracket
 	}
 	
 }
