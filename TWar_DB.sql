@@ -1,186 +1,186 @@
 CREATE TABLE FACTION
 (
-	fName VARCHAR(50) NOT NULL,
-	total_population INTEGER,
+	faction_Name VARCHAR(50) NOT NULL,
+	total_Faction_Population INTEGER,
 	religion VARCHAR(50),
-	CONSTRAINT fName_pk
-        PRIMARY KEY (fName)
+	CONSTRAINT faction_Name_pk
+        PRIMARY KEY (faction_Name)
 );
 
 CREATE TABLE AT_WAR
 (
-    fName_1 VARCHAR(50) NOT NULL,
-    fName_2 VARCHAR(50) NOT NULL,
-    CONSTRAINT War_Factions_PK
-        PRIMARY KEY (fName_1, fName_2),
-    CONSTRAINT War_fN_1_fk
-        FOREIGN KEY (fName_1)
-            REFERENCES FACTION (fName)
+    warring_Faction_Name_1 VARCHAR(50) NOT NULL,
+    warring_Faction_Name_2 VARCHAR(50) NOT NULL,
+    CONSTRAINT warring_Factions_pk
+        PRIMARY KEY (warring_Faction_Name_1,
+                        warring_Faction_Name_2),
+    CONSTRAINT warring_Faction_Name_1_fk
+        FOREIGN KEY (warring_Faction_Name_1)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT War_fN_2_fk
-        FOREIGN KEY (fName_2)
-            REFERENCES FACTION (fName)
+    CONSTRAINT warring_Faction_Name_2_fk
+        FOREIGN KEY (warring_Faction_Name_2)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE ALLIED
 (
-    fName_1 VARCHAR(50) NOT NULL,
-    fName_2 VARCHAR(50) NOT NULL,
-    CONSTRAINT Ally_Factions_PK
-        PRIMARY KEY (fName_1, fName_2),
-    CONSTRAINT Ally_fN_1_fk
-        FOREIGN KEY (fName_1)
-            REFERENCES FACTION (fName)
+    allied_Faction_Name_1 VARCHAR(50) NOT NULL,
+    allied_Faction_Name_2 VARCHAR(50) NOT NULL,
+    CONSTRAINT allied_Factions_pk
+        PRIMARY KEY (allied_Faction_Name_1,
+                        allied_Faction_Name_2),
+    CONSTRAINT allied_Faction_Name_1_fk
+        FOREIGN KEY (allied_Faction_Name_1)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT Ally_fN_2_fk
-        FOREIGN KEY (fName_2)
-            REFERENCES FACTION (fName)
+    CONSTRAINT allied_Faction_Name_2_fk
+        FOREIGN KEY (allied_Faction_Name_2)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE MILITARY_FORCE
 (
-    mID INT NOT NULL,
-	mName VARCHAR(100) NOT NULL,
+	military_Force_Name VARCHAR(100) NOT NULL,
 	unit_Count INT,
 	morale SET ('eager', 'fair', 'poor'),
-	cavalry_Count INT,
-	ship_Count INT,
+	faction_Army_Cavalry_Count INT,
+	navy_Ship_Count INT,
 	military_Force_Type CHAR NOT NULL,
-	fName VARCHAR(50) NOT NULL,
-	CONSTRAINT F_MF_recruits_fName_fk
-        FOREIGN KEY (fName)
-            REFERENCES FACTION (fName)
+	recruited_By_Faction_Name VARCHAR(50) NOT NULL,
+	garrisoned_At_Settlement_Name VARCHAR(50),
+	CONSTRAINT military_Force_Recruited_By_Faction_Name_fk
+        FOREIGN KEY (recruited_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-	CONSTRAINT mID_pk
-        PRIMARY KEY (mID)
+    CONSTRAINT military_Force_Garrisoned_At_Settlement_Name_fk
+        FOREIGN KEY (garrisoned_At_Settlement_Name)
+            REFERENCES SETTLEMENT (settlement_Name)
+                ON UPDATE CASCADE,
+	CONSTRAINT military_Force_Name_pk
+        PRIMARY KEY (military_Force_Name)
 );
 
 CREATE TABLE FACTION_ARMY
 (
-	mID INT NOT NULL,
+	faction_Army_Military_Force_Name INT NOT NULL,
 	cavalry_Count INT,
-	CONSTRAINT FA_mID_pk
-        PRIMARY KEY (mID),
-    CONSTRAINT MF_FA_mID_fk
-	    FOREIGN KEY (mID)
-	        REFERENCES MILITARY_FORCE (mID)
+	CONSTRAINT faction_Army_Military_Force_Name_pk
+        PRIMARY KEY (faction_Army_Military_Force_Name),
+    CONSTRAINT military_Force_Name_Of_Faction_Army_fk
+	    FOREIGN KEY (faction_Army_Military_Force_Name)
+	        REFERENCES MILITARY_FORCE (military_Force_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE NAVY
 (
-	mID INT NOT NULL,
+	navy_Military_Force_Name INT NOT NULL,
 	ship_Count INT,
-	CONSTRAINT NAVY_mID_pk
-        PRIMARY KEY (mID),
-    CONSTRAINT MF_NAVY_mID_fk
-	    FOREIGN KEY (mID)
-	        REFERENCES MILITARY_FORCE (mID)
+	CONSTRAINT navy_Military_Force_Name_pk
+        PRIMARY KEY (navy_Military_Force_Name),
+    CONSTRAINT military_Force_Name_Of_Navy_fk
+	    FOREIGN KEY (navy_Military_Force_Name)
+	        REFERENCES MILITARY_FORCE (military_Force_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE BATTLED
 (
-    mID_1 INT NOT NULL,
-    mID_2 INT NOT NULL,
-    victor VARCHAR(50) NOT NULL,
-    attacker VARCHAR(50) NOT NULL,
-    defender VARCHAR(50) NOT NULL,
-    att_Losses INT,
-    def_Losses INT NOT NULL,
-    CONSTRAINT B_mID_pk
-        PRIMARY KEY (mID_1, mID_2),
-    CONSTRAINT MF_B_mID1_fk
-        FOREIGN KEY (mID_1)
-            REFERENCES MILITARY_FORCE (mID)
+    battling_Military_Force_Name_1 INT NOT NULL,
+    battling_Military_Force_Name_2 INT NOT NULL,
+    victor_Faction_Name VARCHAR(50) NOT NULL,
+    attacker_Faction_Name VARCHAR(50) NOT NULL,
+    defender_Faction_Name VARCHAR(50) NOT NULL,
+    attacking_Military_Force_Name_Losses INT,
+    defending_Military_Force_Name_Losses INT,
+    CONSTRAINT battling_Military_Force_Names_pk
+        PRIMARY KEY (battling_Military_Force_Name_1,
+                        battling_Military_Force_Name_2),
+    CONSTRAINT battling_Military_Force_Name_1_fk
+        FOREIGN KEY (battling_Military_Force_Name_1)
+            REFERENCES MILITARY_FORCE (military_Force_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT MF_B_mID2_fk
-        FOREIGN KEY (mID_2)
-            REFERENCES MILITARY_FORCE (mID)
+    CONSTRAINT battling_Military_Force_Name_2_fk
+        FOREIGN KEY (battling_Military_Force_Name_2)
+            REFERENCES MILITARY_FORCE (military_Force_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT F_B_vic_fk
-        FOREIGN KEY (victor)
-            REFERENCES FACTION (fName)
+    CONSTRAINT victor_Faction_Name_fk
+        FOREIGN KEY (victor_Faction_Name)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
     CONSTRAINT F_B_att_fk
-        FOREIGN KEY (attacker)
-            REFERENCES FACTION (fName)
+        FOREIGN KEY (attacker_Faction_Name)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
     CONSTRAINT F_B_def_fk
-        FOREIGN KEY (defender)
-            REFERENCES FACTION (fNAME)
+        FOREIGN KEY (defender_Faction_Name)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE SETTLEMENT
 (
-	sName VARCHAR(50) NOT NULL,
-	Population INT NOT NULL,
-	taxesCollected INTEGER,
-	Garrison_Unit_Count INTEGER,
+	settlement_Name VARCHAR(50) NOT NULL,
+	settlement_Population INT NOT NULL,
+	city_Taxes_Collected INTEGER,
+	stronghold_Garrison_Unit_Count INTEGER,
 	settlement_Type CHAR NOT NULL,
-	fName VARCHAR(50) NOT NULL,
-	mID INT,
-	date_Occupied DATE,
-	CONSTRAINT F_S_controls_fName_fk
-        FOREIGN KEY (fName)
-            REFERENCES FACTION (fName)
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	faction_Date_Settlement_Occupied DATE,
+	CONSTRAINT faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT MF_S_garrison_mID_fk
-        FOREIGN KEY (mID)
-            REFERENCES MILITARY_FORCE (mID)
-                ON UPDATE CASCADE,
-	CONSTRAINT S_sName_pk
-	    PRIMARY KEY (sName)
+	CONSTRAINT settlement_Name_pk
+	    PRIMARY KEY (settlement_Name)
 );
 
 CREATE TABLE CITY
 (
-	sName VARCHAR(50) NOT NULL,
-	taxesCollected INTEGER,
-	CONSTRAINT C_sName_pk
-	    PRIMARY KEY (sName),
-	CONSTRAINT S_C_sName_fk
-	    FOREIGN KEY (sName)
-	        REFERENCES SETTLEMENT (sName)
+	settlement_Name_Of_City VARCHAR(50) NOT NULL,
+	taxes_Collected INTEGER,
+	CONSTRAINT settlement_Name_Of_City_pk
+	    PRIMARY KEY (settlement_Name_Of_City),
+	CONSTRAINT settlement_Name_Of_City_fk
+	    FOREIGN KEY (settlement_Name_Of_City)
+	        REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE STRONGHOLD
 (
-	sName VARCHAR(50) NOT NULL,
-	Garrison_Unit_Count INTEGER,
-	mID INT,
-	CONSTRAINT S_MF_Str_garrison_mID_fk
-        FOREIGN KEY (mID)
-            REFERENCES SETTLEMENT (mID)
-                ON UPDATE CASCADE,
-	CONSTRAINT Str_sName_pk
-	    PRIMARY KEY (sName),
-	CONSTRAINT S_Str_sName_fk
-	    FOREIGN KEY (sName)
-	        REFERENCES SETTLEMENT (sName)
+	settlement_Name_Of_Stronghold VARCHAR(50) NOT NULL,
+	Garrison_Unit_Count_In_Stronghold INTEGER,
+    CONSTRAINT Garrison_Unit_Count_In_Stronghold_positive
+        CHECK (Garrison_Unit_Count_In_Stronghold > 0),
+	CONSTRAINT settlement_Name_Of_Stronghold_pk
+	    PRIMARY KEY (settlement_Name_Of_Stronghold),
+	CONSTRAINT settlement_Name_Of_Stronghold_fk
+	    FOREIGN KEY (settlement_Name_Of_Stronghold)
+	        REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE SETTLEMENT_ROAD
 (
-    sName_1 VARCHAR(50) NOT NULL,
-    sName_2 VARCHAR(50) NOT NULL,
-    distance INT NOT NULL,
-    road_Quality SET ('dirt', 'paved', 'brick'),
+    road_Between_Settlement_Name_1 VARCHAR(50) NOT NULL,
+    road_Between_Settlement_Name_2 VARCHAR(50) NOT NULL,
+    road_Length_Between_Settlements INT NOT NULL,
+    road_Quality SET ('none', 'dirt', 'paved', 'brick'),
     travel_Time TIME,
-    CONSTRAINT SRd_sName1_sName2_pk
-        PRIMARY KEY (sName_1, sName_2),
-    CONSTRAINT S_SRd_sName1_fk
-        FOREIGN KEY (sName_1)
-            REFERENCES SETTLEMENT (sName)
+    CONSTRAINT road_Between_Settlements_Name_pk
+        PRIMARY KEY (road_Between_Settlement_Name_1,
+                        road_Between_Settlement_Name_2),
+    CONSTRAINT road_Between_Settlement_Name_1_fk
+        FOREIGN KEY (road_Between_Settlement_Name_2)
+            REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT S_SRd_sName2_fk
-        FOREIGN KEY (sName_2)
-            REFERENCES SETTLEMENT (sName)
+    CONSTRAINT road_Between_Settlement_Name_2_fk
+        FOREIGN KEY (road_Between_Settlement_Name_2)
+            REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE
 );
 
@@ -223,69 +223,67 @@ CREATE TABLE GARRISON
 
 CREATE TABLE STRATEGIC_BUILDING
 (
-	sName VARCHAR(50) NOT NULL,
-    sB_Name VARCHAR(50) NOT NULL,
+	built_By_Settlement_Name VARCHAR(50) NOT NULL,
+    strategic_Building_Name VARCHAR(50) NOT NULL,
 	structural_Integrity SET ('good', 'damaged', 'destroyed'),
-	smithType VARCHAR(50),
-	foodType VARCHAR(50),
-	resourceType VARCHAR(50),
+	smith_Type VARCHAR(50),
+	food_Type VARCHAR(50),
+	resource_Type VARCHAR(50),
 	strategic_Building_Type CHAR NOT NULL,
-	CONSTRAINT SB_sName_pk
-        PRIMARY KEY (sName, sB_Name),
-    CONSTRAINT S_SB_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES SETTLEMENT (sName)
+	CONSTRAINT strategic_Building_Settlement_Name_pk
+        PRIMARY KEY (built_By_Settlement_Name,
+                        strategic_Building_Name),
+    CONSTRAINT strategic_Building_Built_By_Settlement_Name_fk
+        FOREIGN KEY (built_By_Settlement_Name)
+            REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE BLACKSMITH
 (
-	sName VARCHAR(50) NOT NULL,
-	sB_Name VARCHAR(50) NOT NULL,
-    smithType VARCHAR(50),
-	CONSTRAINT BS_sName_sBName_pk
-        PRIMARY KEY (sName, sB_Name),
-    CONSTRAINT SB_BS_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES STRATEGIC_BUILDING (sName)
-                ON UPDATE CASCADE,
-    CONSTRAINT SB_BS_sBName_fk
-        FOREIGN KEY (sB_Name)
-            REFERENCES STRATEGIC_BUILDING (sB_Name)
+	blacksmith_Built_By_Settlement_Name VARCHAR(50) NOT NULL,
+	blacksmith_Strategic_Building_Name VARCHAR(50) NOT NULL,
+    smith_Type VARCHAR(50),
+	CONSTRAINT strategic_Building_Blacksmith_Built_By_Settlement_Name_pk
+        PRIMARY KEY (blacksmith_Built_By_Settlement_Name,
+                        blacksmith_Strategic_Building_Name),
+    CONSTRAINT strategic_Building_Blacksmith_Built_By_Settlement_Name_fk
+        FOREIGN KEY (blacksmith_Built_By_Settlement_Name,
+                        blacksmith_Strategic_Building_Name)
+            REFERENCES STRATEGIC_BUILDING (built_By_Settlement_Name,
+                                            strategic_Building_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE FARM
 (
-	sName VARCHAR(50) NOT NULL,
-	sB_Name VARCHAR(50) NOT NULL,
-    foodType VARCHAR(50),
-	CONSTRAINT Farm_sName_sBName_pk
-        PRIMARY KEY (sName, sB_Name),
-    CONSTRAINT SB_Farm_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES STRATEGIC_BUILDING (sName)
-                ON UPDATE CASCADE,
-    CONSTRAINT SB_Farm_sBName_fk
-        FOREIGN KEY (sB_Name)
-            REFERENCES STRATEGIC_BUILDING (sB_Name)
+	farm_Built_By_Settlement_Name VARCHAR(50) NOT NULL,
+	farm_Strategic_Building_Name VARCHAR(50) NOT NULL,
+    food_Type VARCHAR(50),
+	CONSTRAINT farm_Strategic_Building_Built_By_Settlement_Name_pk
+        PRIMARY KEY (farm_Built_By_Settlement_Name,
+                        farm_Strategic_Building_Name),
+    CONSTRAINT farm_Strategic_Building_Built_By_Settlement_Name_fk
+        FOREIGN KEY (farm_Built_By_Settlement_Name,
+                        farm_Strategic_Building_Name)
+            REFERENCES STRATEGIC_BUILDING (built_By_Settlement_Name,
+                                            strategic_Building_Name)
                 ON UPDATE CASCADE
 );
 
 CREATE TABLE MINE
 (
-	sName VARCHAR(50) NOT NULL,
-	sB_Name VARCHAR(50) NOT NULL,
-    resourceType VARCHAR(50),
-	CONSTRAINT Mine_sName_sBName_pk
-        PRIMARY KEY (sName, sB_Name),
-    CONSTRAINT SB_Mine_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES STRATEGIC_BUILDING (sName)
-                ON UPDATE CASCADE,
-    CONSTRAINT SB_Mine_sBName_fk
-        FOREIGN KEY (sB_Name)
-            REFERENCES STRATEGIC_BUILDING (sB_Name)
+	mine_Built_By_Settlement_Name VARCHAR(50) NOT NULL,
+	mine_Strategic_Building_Name VARCHAR(50) NOT NULL,
+    resource_Type VARCHAR(50),
+	CONSTRAINT mine_Strategic_Building_Built_By_Settlement_Name_pk
+        PRIMARY KEY (mine_Built_By_Settlement_Name,
+                        mine_Strategic_Building_Name),
+    CONSTRAINT mine_Strategic_Building_Built_By_Settlement_Name_fk
+        FOREIGN KEY (mine_Built_By_Settlement_Name,
+                        mine_Strategic_Building_Name)
+            REFERENCES STRATEGIC_BUILDING (built_By_Settlement_Name,
+                                            strategic_Building_Name)
                 ON UPDATE CASCADE
 );
 
