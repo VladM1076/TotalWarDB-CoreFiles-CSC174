@@ -586,34 +586,6 @@
 									</thead>
 									
 									<tbody>
-										<tr>
-										  <td>Roman Empire</td>
-										  <td>Byzantine Empire</td>
-										  <td>Egypt</td>
-										  <td>Christian</td>
-										  <td>100,000</td>
-										</tr>
-										<tr>
-										  <td>Byzantine Empire</td>
-										  <td>Roman Empire</td>
-										  <td>Egypt, Persian Empire</td>
-										  <td>Orthodox</td>
-										  <td>111,000</td>
-										</tr>
-										<tr>
-										  <td>Persian Empire</td>
-										  <td>Egypt</td>
-										  <td>Byzantine Empire</td>
-										  <td>Islam</td>
-										  <td>150,000</td>
-										</tr>
-										<tr>
-										  <td>Egypt</td>
-										  <td>Persian Empire</td>
-										  <td>Byzantine Empire, Rome</td>
-										  <td>Islam</td>
-										  <td>75,000</td>
-										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -856,7 +828,34 @@
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
+  
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/plug-ins/1.10.15/api/row().show().js"></script>
 
 </body>
+
+<script>
+$(document).ready(function () {
+        var t = $('#factionTable').DataTable({
+            "paging": true,
+            "pageLength": 10,
+            "processing": true,
+            "serverSide": true,
+            'ajax': {
+				'data': "json",
+                'type': 'GET',
+                'url': '/populateFactionTable'
+            },
+            'columns':
+                [
+                { 'data': 'Name' },
+                { 'data': 'Allied With:' },
+                { 'data': 'At War With:' },
+                { 'data': 'Religion' },
+				{ 'data': 'Total Civilian Population' }
+                ]
+});});
+</script>
 
 </html>
