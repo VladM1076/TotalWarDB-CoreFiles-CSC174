@@ -63,7 +63,7 @@ app.get('/populateFactionTable', (req, res, next) => {
 	// NodeTable requires table's primary key to work properly
 	const primaryKey = "faction_Name"
   
-	const nodeTable = new NodeTable(requestQuery, db, tableName, primaryKey, columnsMap);
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
  
 	nodeTable.output((err, data)=>{
 		if (err) {
