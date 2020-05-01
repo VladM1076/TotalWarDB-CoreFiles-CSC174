@@ -5,10 +5,10 @@ var path = require ('path');
 var app = express();
 
 var connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: 'DBpw',
-	database: 'DBname'
+	host: 'athena.ecs.csus.edu',
+	user: 'datagallore_user',
+	password: 'datagallore_db',
+	database: 'datagallore'
 }
 );
 
@@ -26,14 +26,17 @@ app.post('/addFaction', function(request, response){
 	var factionRel = request.body.frel;
 	var query = 'INSERT INTO FACTION (fName, religion) VALUES(?, ?);';
 	
-	connection.query(query, [factionName, factionRel], function(error, result, fields){
-		if(error){
-			console.log(error);
-		}else{
-			console.log(result);
+	if (factionName != NULL && factionRel != NULL)
+	{
+		connection.query(query, [factionName, factionRel], function(error, result, fields){
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 		}
+		);
 	}
-	);
 }
 );
 
@@ -43,16 +46,16 @@ app.post('/addRelation', function(request, response){
 	var name2 = request.body.name2;
 	var query;
 	
-	if(request.body.war != NULL){
-		query = 'INSERT INTO AT_WAR VALUES(?, ?);';
-	}else if(request.body.ally !=NULL){
-		query = 'INSERT INTO ALLIED VALUES(?, ?);';
-	}else if(request.body.neutral != NULL){
-		query = 'SELECT * FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
+	if(request.body.rel == "war"){
+		query = 'INSERT INTO AT_WAR (fName_1, fName_2) VALUES(?, ?);';
+	}else if(request.body.rel == "ally"){
+		query = 'INSERT INTO ALLIED (fName_1, fName_2) VALUES(?, ?);';
+	}else if(request.body.rel == "neutral"){
+		query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ?;';
 
 		connection.query(query, [name1, name2], function(error, result, fields){
 			if(result != NULL){
-				var newQuery = 'DELETE FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
+				var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ?;';
 				connection.query(newQuery, [name1, name2], function(error, result, fields){
 					if(error){
 						console.log(error);
@@ -63,7 +66,7 @@ app.post('/addRelation', function(request, response){
 				);
 	
 			}else{
-				var newQuery = 'DELETE FROM ALLIED WHERE fname1 = ? AND fname2 = ?;';
+				var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ?;';
 				connection.query(newQuery, [name1, name2], function(error, result, fields){
 					if(error){
 						console.log(error);
@@ -369,6 +372,23 @@ app.post('/moveMilitary', function(request, response){
 }
 );
 
+app.post('/updateMorale', function(request, response){
+	var forceName = request.body.name;
+	var state = request.body.morale;
+	
+	query = 'UPDATE MILITARY_FORCE  ';
+	if(state != NULL && forceName != NULL){
+		connection.query(query, [], function(error, result, fields){
+			if(error) throw error;
+			//if(getstate = null) then write to screen that something needs to be entered
+		}
+		);
+	}else{
+		//if the above comment doesnt work then do it in this else bracket
+	}
+	
+}
+);
 
 
 
