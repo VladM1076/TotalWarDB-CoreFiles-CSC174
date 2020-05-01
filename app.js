@@ -30,6 +30,17 @@ app.get('/TotalWarManager', function(request, response){
 }
 );
 
+app.get('/populateFactionTable', function(req,res){
+
+    var query = "select *  from Faction;";
+	
+	var result = [["Rome", "Egypt", "Persian Empire", "Christianity", "10,000"]];
+	
+	result = JSON.stringify(result);
+	
+	return res.send(result);
+});
+
 app.post('/addFaction', function(request, response){
 	var factionName = request.body.name;
 	var factionRel = request.body.frel;
