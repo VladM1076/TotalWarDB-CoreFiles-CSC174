@@ -1,16 +1,25 @@
+var http = require('http');
 var mysql = require('mysql');
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require ('path');
 var app = express();
 
+
 var connection = mysql.createConnection({
-	host: 'athena.ecs.csus.edu',
-	user: 'datagallore_user',
-	password: 'datagallore_db',
-	database: 'datagallore'
+	host: 'localhost',
+	user: 'root',
+	password: '', 	//enter root PW here
+	database: 'TotalWarDB'
 }
 );
+
+var server = app.listen(8082, function () {
+  var host = server.address().address
+  var port = server.address().port
+  console.log("Example app listening at %s:%s Port", host, port)
+});
+
 
 app.use(bodyParser.urlencoded({ extended : true}));
 app.use(bodyParser.json());
@@ -24,9 +33,9 @@ app.get('/TotalWarManager', function(request, response){
 app.post('/addFaction', function(request, response){
 	var factionName = request.body.name;
 	var factionRel = request.body.frel;
-	var query = 'INSERT INTO FACTION (fName, religion) VALUES(?, ?);';
+	var query = 'INSERT INTO FACTION (fName, total_population, religion) VALUES(?, 0, ?);';
 	
-	if (factionName != NULL && factionRel != NULL)
+	if (factionName != null && factionRel != null)
 	{
 		connection.query(query, [factionName, factionRel], function(error, result, fields){
 			if(error){
@@ -37,6 +46,7 @@ app.post('/addFaction', function(request, response){
 		}
 		);
 	}
+	response.redirect('/TotalWarManager');
 }
 );
 
@@ -46,51 +56,92 @@ app.post('/addRelation', function(request, response){
 	var name2 = request.body.name2;
 	var query;
 	
-	if(request.body.rel == "war"){
-		query = 'INSERT INTO AT_WAR (fName_1, fName_2) VALUES(?, ?);';
-	}else if(request.body.rel == "ally"){
-		query = 'INSERT INTO ALLIED (fName_1, fName_2) VALUES(?, ?);';
-	}else if(request.body.rel == "neutral"){
-		query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ?;';
+	if (name1 != null && name2 != null)
+	{
+		if(request.body.rel == "war"){
+			
+			query = 'SELECT * FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
 
-		connection.query(query, [name1, name2], function(error, result, fields){
-			if(result != NULL){
-				var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ?;';
-				connection.query(newQuery, [name1, name2], function(error, result, fields){
-					if(error){
-						console.log(error);
-					}else{
-						console.log(result);
+			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
+				if(result != null){
+					var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
+						if(error){
+							console.log(error);
+						}else{
+							console.log(result);
+						}
 					}
+					);
+		
 				}
-				);
-	
-			}else{
-				var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ?;';
-				connection.query(newQuery, [name1, name2], function(error, result, fields){
-					if(error){
-						console.log(error);
-					}else{
-						console.log(result);
+			}
+			);
+			
+			query = 'INSERT INTO AT_WAR (fName_1, fName_2) VALUES(?, ?);';
+			
+		}else if(request.body.rel == "ally"){
+			
+			query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+			
+			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
+				if(result != null){
+					var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+					connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
+						if(error){
+							console.log(error);
+						}else{
+							console.log(result);
+						}
 					}
+					);
+		
 				}
-				);
+			}
+			);
+			
+			query = 'INSERT INTO ALLIED (fName_1, fName_2) VALUES(?, ?);';
+			
+		}else if(request.body.rel == "neutral"){
+			
+			query = 'SELECT * FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+
+			connection.query(query, [name1, name2, name1, name2], function(error, result, fields){
 				
-			}//end if-else
+				//console.log(result);
+				
+				if(result.length != 0)			
+					var newQuery = 'DELETE FROM AT_WAR WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+				
+				else				
+					var newQuery = 'DELETE FROM ALLIED WHERE fname_1 = ? AND fname_2 = ? OR fname_2 = ? AND fname_1 = ?;';
+				
+					
+				connection.query(newQuery, [name1, name2, name1, name2], function(error, result, fields){
+					if(error){
+						console.log(error);
+					}else{
+						console.log(result);
+					}
+				}
+				);
+			}
+			);
+			response.redirect('/TotalWarManager');
+			return;
+		}//end else-if
+		
+		//
+		connection.query(query, [name1, name2], function(error, result, fields){
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 		}
 		);
-		return;
-	}//end else-if
-	
-	//
-	connection.query(query, [name1, name2], function(error, result, fields){
-		if(error){
-			console.log(error);
-		}else{
-			console.log(result);
-		}
 	}
-	);
+	response.redirect('/TotalWarManager');
 }
 );
 
@@ -99,31 +150,37 @@ app.post('/updateFaction', function(request, response){
 	var factionRel = request.body.frel;
 	var query = 'UPDATE FACTION SET religion=? WHERE fName = ?;';
 	
-	connection.query(query, [factionRel, factionName], function(error, result, fields){
-		if(error){
-			console.log(error);
-		}else{
-			console.log(result);
+	if (factionName != null && factionRel != null)
+	{
+		connection.query(query, [factionRel, factionName], function(error, result, fields){
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 		}
+		);
 	}
-	);
-	
-	
-	
+	response.redirect('/TotalWarManager');
 }
 );
 
 app.post('/remFaction', function(request, response){
 	var factionName = request.body.name;
-	var query = 'DELETE FROM table_name WHERE name = ?);';
-	connection.query(query, [factionName], function(error, result, fields){
-		if(error){
-			console.log(error);
-		}else{
-			console.log(result);
+	var query = 'DELETE FROM FACTION WHERE fname = ?;';
+	
+	if (factionName != null)
+	{
+		connection.query(query, [factionName], function(error, result, fields){
+			if(error){
+				console.log(error);
+			}else{
+				console.log(result);
+			}
 		}
+		);
 	}
-	);
+	response.redirect('/TotalWarManager');
 }
 );
 
@@ -389,17 +446,3 @@ app.post('/updateMorale', function(request, response){
 	
 }
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
