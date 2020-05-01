@@ -48,7 +48,7 @@ app.post('/addRelation', function(request, response){
 	}else if(request.body.ally !=NULL){
 		query = 'INSERT INTO ALLIED VALUES(?, ?);';
 	}else if(request.body.neutral != NULL){
-		query = 'SELECT FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
+		query = 'SELECT * FROM AT_WAR WHERE fname1 = ? AND fname2 = ?;';
 
 		connection.query(query, [name1, name2], function(error, result, fields){
 			if(result != NULL){
