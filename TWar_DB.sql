@@ -39,31 +39,20 @@ CREATE TABLE ALLIED
                 ON UPDATE CASCADE
 );
 
-CREATE TABLE RECRUITS
-(
-    fName VARCHAR(50) NOT NULL,
-    mID INT NOT NULL,
-    CONSTRAINT Rec_Fac_MID_pk
-        PRIMARY KEY (fName, mID),
-    CONSTRAINT Rec_FN_fk
-        FOREIGN KEY (fName)
-            REFERENCES FACTION (fName)
-                ON UPDATE CASCADE,
-    CONSTRAINT Rec_MID_fk
-        FOREIGN KEY (mID)
-            REFERENCES MILITARY_FORCE (mID)
-                ON UPDATE CASCADE
-);
-
 CREATE TABLE MILITARY_FORCE
 (
     mID INT NOT NULL,
 	mName VARCHAR(100) NOT NULL,
 	unit_Count INT,
-	moralle SET ('eager', 'fair', 'poor'),
+	morale SET ('eager', 'fair', 'poor'),
 	cavalry_Count INT,
 	ship_Count INT,
 	military_Force_Type CHAR NOT NULL,
+	fName VARCHAR(50) NOT NULL,
+	CONSTRAINT F_MF_recruits_fName_fk
+        FOREIGN KEY (fName)
+            REFERENCES FACTION (fName)
+                ON UPDATE CASCADE,
 	CONSTRAINT mID_pk
         PRIMARY KEY (mID)
 );
@@ -132,6 +121,17 @@ CREATE TABLE SETTLEMENT
 	taxesCollected INTEGER,
 	Garrison_Unit_Count INTEGER,
 	settlement_Type CHAR NOT NULL,
+	fName VARCHAR(50) NOT NULL,
+	mID INT,
+	date_Occupied DATE,
+	CONSTRAINT F_S_controls_fName_fk
+        FOREIGN KEY (fName)
+            REFERENCES FACTION (fName)
+                ON UPDATE CASCADE,
+    CONSTRAINT MF_S_garrison_mID_fk
+        FOREIGN KEY (mID)
+            REFERENCES MILITARY_FORCE (mID)
+                ON UPDATE CASCADE,
 	CONSTRAINT S_sName_pk
 	    PRIMARY KEY (sName)
 );
@@ -152,6 +152,11 @@ CREATE TABLE STRONGHOLD
 (
 	sName VARCHAR(50) NOT NULL,
 	Garrison_Unit_Count INTEGER,
+	mID INT,
+	CONSTRAINT S_MF_Str_garrison_mID_fk
+        FOREIGN KEY (mID)
+            REFERENCES SETTLEMENT (mID)
+                ON UPDATE CASCADE,
 	CONSTRAINT Str_sName_pk
 	    PRIMARY KEY (sName),
 	CONSTRAINT S_Str_sName_fk
@@ -179,6 +184,7 @@ CREATE TABLE SETTLEMENT_ROAD
                 ON UPDATE CASCADE
 );
 
+/*
 CREATE TABLE CONTROLS
 (
     fName VARCHAR(50) NOT NULL,
@@ -195,7 +201,9 @@ CREATE TABLE CONTROLS
             REFERENCES SETTLEMENT (sName)
                 ON UPDATE CASCADE
 );
+*/
 
+/*
 CREATE TABLE GARRISON
 (
     sName VARCHAR(50) NOT NULL,
@@ -211,6 +219,7 @@ CREATE TABLE GARRISON
             REFERENCES MILITARY_FORCE (mID)
                 ON UPDATE CASCADE
 );
+ */
 
 CREATE TABLE STRATEGIC_BUILDING
 (
