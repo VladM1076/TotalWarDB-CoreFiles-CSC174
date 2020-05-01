@@ -578,15 +578,12 @@
 									<thead>
 										<tr>
 										  <th>Name</th>
-										  <th>Allied With:</th>
-										  <th>At War With:</th>
 										  <th>Religion</th>
 										  <th>Total Civilian Population</th>
 										</tr>
 									</thead>
 									
-									<tbody>
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -819,43 +816,49 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin-2.min.js"></script>
+	
+	<link
+      rel="stylesheet"
+      type="text/css"
+      href="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css"
+    />
   
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
-  <script src="https://cdn.datatables.net/plug-ins/1.10.15/api/row().show().js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+	<script src="https://cdn.datatables.net/plug-ins/1.10.15/api/row().show().js"></script>
+	
+	<script
+      type="text/javascript"
+      src="//cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.js"
+    ></script>
+    <script
+      src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  
+	<script>
+	$(document).ready(function () {
+		$('#factionTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateFactionTable"
+		});
+	});
+	</script>
 
 </body>
 
-<script>
-$(document).ready(function () {
-        var t = $('#factionTable').DataTable({
-            "paging": true,
-            "pageLength": 10,
-            "processing": true,
-            "serverSide": true,
-            'ajax': {
-				'data': "json",
-                'type': 'GET',
-                'url': '/populateFactionTable'
-            },
-            'columns':
-                [
-                { 'data': 'Name' },
-                { 'data': 'Allied With:' },
-                { 'data': 'At War With:' },
-                { 'data': 'Religion' },
-				{ 'data': 'Total Civilian Population' }
-                ]
-});});
-</script>
 
 </html>
