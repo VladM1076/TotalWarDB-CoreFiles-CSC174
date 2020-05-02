@@ -525,17 +525,22 @@ CREATE TRIGGER battled_after_insert_trigger
 
         UPDATE MILITARY_FORCE 
 		SET navy_Ship_Count = (SELECT navy_Ship_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_1 AND force_1_letter = 'N') * (1 - (new.attacking_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
-			= new.battling_Military_Force_Name_1)),
+			= new.battling_Military_Force_Name_1));
+	UPDATE MILITARY FORCE
 		SET navy_Ship_Count = (SELECT navy_Ship_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_2 AND force_2_letter = 'N') * (1 - (new.defending_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
-			= new.battling_Military_Force_Name_2)),
+			= new.battling_Military_Force_Name_2));
+	UPDATE MILITARY FORCE
 		SET faction_Army_Cavalry_Count = (SELECT faction_Army_Cavalry_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_1 AND force_1_letter = 'A') * (1 - (new.attacking_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
-			= new.battling_Military_Force_Name_1)),
+			= new.battling_Military_Force_Name_1));
+	UPDATE MILITARY FORCE
 		SET faction_Army_Cavalry_Count = (SELECT faction_Army_Cavalry_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_2 AND force_2_letter = 'A') * (1 - (new.defending_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
-			= new.battling_Military_Force_Name_2)),
+			= new.battling_Military_Force_Name_2));
+	UPDATE MILITARY FORCE
 		SET unitCount 
 		= (SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
 			= new.battling_Military_Force_Name_1)- new.attacking_Military_Force_Name_Losses
-			WHERE military_Force_Name = battling_Military_Force_Name_1,
+			WHERE military_Force_Name = battling_Military_Force_Name_1;
+	UPDATE MILITARY FORCE
 		SET unitCount
 			= (SELECT unitCount FROM MILITARY_FORCE
 			WHERE military_Force_Name
@@ -545,6 +550,32 @@ CREATE TRIGGER battled_after_insert_trigger
     END $$
 DELIMITER ;
 
+
+DELIMITER $$
+CREATE TRIGGER settlement_after_insert_trigger
+    AFTER INSERT ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+		UPDATE Faction 
+			SET total_Faction_Population
+			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population;
+    END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER settlement_after_update_trigger
+    AFTER UPDATE ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+		UPDATE Faction 
+			SET total_Faction_Population
+			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population;
+		UPDATE Faction 
+			SET total_Faction_Population
+			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = old.controlled_By_Faction_Name) - new.settlement_Population;
+    END $$
+DELIMITER ;
 
 CREATE TABLE SETTLEMENT_ROAD
 (
