@@ -366,12 +366,12 @@
 													<input type="text" id="length" name="length"><br>
 													
 													Road Quality:
-													<input type="radio" id="roadQ" name="roadQ" value="good">
-													<label for="good">Good</label>
-													<input type="radio" id="roadQ" name="roadQ" value="damaged">
-													<label for="damaged">Damaged</label>
-													<input type="radio" id="roadQ" name="roadQ" value="destroyed">
-													<label for="destroyed">Destroyed</label><br>
+													<input type="radio" id="roadQ" name="roadQ" value="dirt">
+													<label for="dirt">Dirt</label>
+													<input type="radio" id="roadQ" name="roadQ" value="paved">
+													<label for="paved">Paved</label>
+													<input type="radio" id="roadQ" name="roadQ" value="brick">
+													<label for="brick">Brick</label><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -606,36 +606,7 @@
 										</tr>
 									</thead>
 									
-									<tbody>
-										<tr>
-										  <td>Rome</td>
-										  <td>1,000</td>
-										  <td>10,000</td>
-										  <td>Roman Empire</td>
-										  <th>Gold, Sword Smiths, Sheep, Grain</th>
-										</tr>
-										<tr>
-										  <td>Constantinople</td>
-										  <td>950</td>
-										  <td>11,000</td>
-										  <td>Byzantine Empire</td>
-										  <th>Gold, Sword Smiths, Sheep, Grain</th>
-										</tr>
-										<tr>
-										  <td>Babylon</td>
-										  <td>1,100</td>
-										  <td>15,000</td>
-										  <td>Persian Empire</td>
-										  <th>Gold, Sword Smiths, Sheep, Grain</th>
-										</tr>
-										<tr>
-										  <td>Cairo</td>
-										  <td>1,000</td>
-										  <td>7,000</td>
-										  <td>Egypt</td>
-										  <th>Gold, Sword Smiths, Sheep, Grain</th>
-										</tr>
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -658,36 +629,7 @@
 										</tr>
 									</thead>
 									
-									<tbody>
-										<tr>
-										  <td>Castra</td>
-										  <td>1,000</td>
-										  <td>10,000</td>
-										  <td>Roman Empire</td>
-										  <th>Weapon Smiths, Armor Smiths</th>
-										</tr>
-										<tr>
-										  <td>Angelokastro</td>
-										  <td>950</td>
-										  <td>11,000</td>
-										  <td>Byzantine Empire</td>
-										  <th>Weapon Smiths, Armor Smiths</th>
-										</tr>
-										<tr>
-										  <td>Izad-Khast</td>
-										  <td>1,100</td>
-										  <td>15,000</td>
-										  <td>Persian Empire</td>
-										  <th>Weapon Smiths, Armor Smiths</th>
-										</tr>
-										<tr>
-										  <td>Fortress of Abydos</td>
-										  <td>1,000</td>
-										  <td>7,000</td>
-										  <td>Egypt</td>
-										  <th>Weapon Smiths, Armor Smiths</th>
-										</tr>
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -709,32 +651,7 @@
 										</tr>
 									</thead>
 									
-									<tbody>
-										<tr>
-										  <td>Castra</td>
-										  <td>Constantinople</td>
-										  <td>50</td>
-										  <td>Good</td>
-										</tr>
-										<tr>
-										  <td>Angelokastro</td>
-										  <td>Constantinople</td>
-										  <td>45</td>
-										  <td>Good</td>
-										</tr>
-										<tr>
-										  <td>Rome</td>
-										  <td>Constantinople</td>
-										  <td>95</td>
-										  <td>Good</td>
-										</tr>
-										<tr>
-										  <td>Fortress of Abydos</td>
-										  <td>Cairo</td>
-										  <td>50</td>
-										  <td>Good</td>
-										</tr>
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -759,44 +676,7 @@
 										</tr>
 									</thead>
 									
-									<tbody>
-										<tr>
-										  <td>Legio V Alaudae</td>
-										  <td>Army</td>
-										  <td>1,000</td>
-										  <td>100</td>
-										  <th>Roman Empire</th>
-										  <th>Rome</th>
-										  <th>eager</th>
-										</tr>
-										<tr>
-										  <td>Komnenian Army</td>
-										  <td>Army</td>
-										  <td>750</td>
-										  <td>100</td>
-										  <th>Byzantine Empire</th>
-										  <th>Constantinople</th>
-										  <th>eager</th>
-										</tr>
-										<tr>
-										  <td>The Immortals</td>
-										  <td>Islam</td>
-										  <td>150,000</td>
-										  <td>100</td>
-										  <th>Persian Empire</th>
-										  <th>Location</th>
-										  <th>eager</th>
-										</tr>
-										<tr>
-										  <td>First Fleet</td>
-										  <td>Navy</td>
-										  <td>750</td>
-										  <td>100</td>
-										  <th>Egypt</th>
-										  <th>Port of Cayro</th>
-										  <th>eager</th>
-										</tr>
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -854,6 +734,16 @@
 			"processing": true,
 			"serverSide": true,
 			'ajax': "/populateFactionTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#roadTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateRoadTable"
 		});
 	});
 	</script>
