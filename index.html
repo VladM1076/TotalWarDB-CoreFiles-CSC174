@@ -205,8 +205,6 @@
 													<input type="text" id="cpop" name="cpop"><br>
 													<label for="cfact">Controlling Faction:</label>
 													<input type="text" id="cfact" name="cfact"><br>
-													<label for="date">Date Built (YYYY-MM-DD) :</label>
-													<input type="text" id="date" name="date"><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -231,8 +229,6 @@
 													<input type="text" id="spop" name="spop"><br>
 													<label for="cfact">Controlling Faction:</label>
 													<input type="text" id="cfact" name="cfact"><br>
-													<label for="date">Date Built:</label>
-													<input type="text" id="date" name="date"><br>
 													
 													<center>
 														<input type="submit" value="Submit">
@@ -591,6 +587,46 @@
 					
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">At War Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="warTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Faction 1:</th>
+										  <th>Faction 2:</th>
+										</tr>
+									</thead>
+									
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Allied Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="allyTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Faction 1:</th>
+										  <th>Faction 2:</th>
+										</tr>
+									</thead>
+									
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">City Table</h6>
 						</div>
 						<div class="card-body">
@@ -602,7 +638,6 @@
 										  <th>Taxes</th>
 										  <th>Population</th>
 										  <th>Controlled by</th>
-										  <th>Strategic Resources</th>
 										</tr>
 									</thead>
 									
@@ -625,7 +660,6 @@
 										  <th>Garrisoned Units</th>
 										  <th>Population</th>
 										  <th>Controlled by</th>
-										  <th>Strategic Resources</th>
 										</tr>
 									</thead>
 									
@@ -659,17 +693,40 @@
 					
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Military Table</h6>
+							<h6 class="m-0 font-weight-bold text-primary">Army Table</h6>
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered" id="militaryTable" width="100%" cellspacing="0">
+								<table class="table table-bordered" id="armyTable" width="100%" cellspacing="0">
 									<thead>
 										<tr>
 										  <th>Name</th>
-										  <th>Type</th>
 										  <th>Number of Units</th>
-										  <th>Number of Horses/Ships</th>
+										  <th>Number of Horses</th>
+										  <th>Controlled by</th>
+										  <th>Location</th>
+										  <th>Morale</th>
+										</tr>
+									</thead>
+									
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Navy Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="navyTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Name</th>
+										  <th>Number of Units</th>
+										  <th>Number of Ships</th>
 										  <th>Controlled by</th>
 										  <th>Location</th>
 										  <th>Morale</th>
@@ -744,6 +801,26 @@
 			"processing": true,
 			"serverSide": true,
 			'ajax': "/populateRoadTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#warTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateWarTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#allyTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateAllyTable"
 		});
 	});
 	</script>
