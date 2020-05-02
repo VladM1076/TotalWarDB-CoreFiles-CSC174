@@ -111,6 +111,13 @@ CREATE TABLE NAVY_MAT_VIEW
                 ON UPDATE CASCADE
 );
 
+
+
+--  These triggers and functions update & synchronize the
+--  FacArmyMatView & NavyMtView. There are also triggers that
+--  enforce the disjoint between Navy & Faction_Army.
+--  The identifying names and references are fairly descriptive.
+
 DELIMITER $$
 CREATE FUNCTION military_force_check_type (military_Force_Type CHAR,
                                            faction_Army_Cavalry_Count INT,
@@ -168,10 +175,11 @@ CREATE TRIGGER military_force_faction_army_insert_after_trigger
     BEGIN
         IF new.military_Force_Type = 'A' THEN
             INSERT INTO FACTION_ARMY_MAT_VIEW
-                value (new.military_Force_Name, new.faction_Army_Cavalry_Count,
+                value (new.military_Force_Name,
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
-                        new.garrisoned_At_Settlement_Name);
+                        new.garrisoned_At_Settlement_Name,
+                        new.faction_Army_Cavalry_Count);
         END IF;
     END $$
 DELIMITER ;
@@ -187,7 +195,7 @@ CREATE TRIGGER military_force_navy_insert_after_trigger
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
                         new.garrisoned_At_Settlement_Name,
-                      new.navy_Ship_Count);
+                        new.navy_Ship_Count);
         END IF;
     END $$
 DELIMITER ;
@@ -266,19 +274,15 @@ DELIMITER ;
 
 
 
-
 CREATE TABLE BATTLED
 (
-    battling_Military_Force_Name_1 INT NOT NULL,
-    battling_Military_Force_Name_2 INT NOT NULL,
+    battling_Military_Force_Name_1 VARCHAR(50) NOT NULL,
+    battling_Military_Force_Name_2 VARCHAR(50) NOT NULL,
     victor_Faction_Name VARCHAR(50) NOT NULL,
     attacker_Faction_Name VARCHAR(50) NOT NULL,
     defender_Faction_Name VARCHAR(50) NOT NULL,
     attacking_Military_Force_Name_Losses INT,
     defending_Military_Force_Name_Losses INT,
-    CONSTRAINT battling_Military_Force_Names_pk
-        PRIMARY KEY (battling_Military_Force_Name_1,
-                        battling_Military_Force_Name_2),
     CONSTRAINT battling_Military_Force_Name_1_fk
         FOREIGN KEY (battling_Military_Force_Name_1)
             REFERENCES MILITARY_FORCE (military_Force_Name)
@@ -291,25 +295,26 @@ CREATE TABLE BATTLED
         FOREIGN KEY (victor_Faction_Name)
             REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT F_B_att_fk
+    CONSTRAINT attacker_Faction_Name_fk
         FOREIGN KEY (attacker_Faction_Name)
             REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE,
-    CONSTRAINT F_B_def_fk
+    CONSTRAINT defender_Faction_Name_fk
         FOREIGN KEY (defender_Faction_Name)
             REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE
 );
 
+
+
 CREATE TABLE SETTLEMENT
 (
 	settlement_Name VARCHAR(50) NOT NULL,
 	settlement_Population INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
 	city_Taxes_Collected INTEGER,
 	stronghold_Garrison_Unit_Count INTEGER,
 	settlement_Type CHAR NOT NULL,
-	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
-	faction_Date_Settlement_Occupied DATE,
 	CONSTRAINT faction_Name_Controlling_Settlement_fk
         FOREIGN KEY (controlled_By_Faction_Name)
             REFERENCES FACTION (faction_Name)
@@ -318,10 +323,16 @@ CREATE TABLE SETTLEMENT
 	    PRIMARY KEY (settlement_Name)
 );
 
-CREATE TABLE CITY
+CREATE TABLE CITY_MAT_VIEW
 (
 	settlement_Name_Of_City VARCHAR(50) NOT NULL,
-	taxes_Collected INTEGER,
+	settlement_Population_Of_City INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	taxes_Collected INTEGER NOT NULL,
+	CONSTRAINT city_Faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
 	CONSTRAINT settlement_Name_Of_City_pk
 	    PRIMARY KEY (settlement_Name_Of_City),
 	CONSTRAINT settlement_Name_Of_City_fk
@@ -330,12 +341,18 @@ CREATE TABLE CITY
                 ON UPDATE CASCADE
 );
 
-CREATE TABLE STRONGHOLD
+CREATE TABLE STRONGHOLD_MAT_VIEW
 (
 	settlement_Name_Of_Stronghold VARCHAR(50) NOT NULL,
-	Garrison_Unit_Count_In_Stronghold INTEGER,
-    CONSTRAINT Garrison_Unit_Count_In_Stronghold_positive
-        CHECK (Garrison_Unit_Count_In_Stronghold > 0),
+	settlement_Population_Of_Stronghold INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	Garrison_Unit_Count_In_Stronghold INTEGER NOT NULL,
+	CONSTRAINT stronghold_Faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT Garrison_Unit_Count_In_Stronghold_exists
+        CHECK (Garrison_Unit_Count_In_Stronghold > 1),
 	CONSTRAINT settlement_Name_Of_Stronghold_pk
 	    PRIMARY KEY (settlement_Name_Of_Stronghold),
 	CONSTRAINT settlement_Name_Of_Stronghold_fk
@@ -343,6 +360,157 @@ CREATE TABLE STRONGHOLD
 	        REFERENCES SETTLEMENT (settlement_Name)
                 ON UPDATE CASCADE
 );
+
+DELIMITER $$
+CREATE FUNCTION settlement_check_type (settlement_Type CHAR,
+                                           city_Taxes_Collected INTEGER,
+                                           stronghold_Garrison_Unit_Count INTEGER)
+                                           RETURNS BOOLEAN
+    BEGIN
+        DECLARE isGood BOOLEAN default FALSE;
+
+        CASE (settlement_Type)
+            WHEN 'C' THEN SET isGood = (stronghold_Garrison_Unit_Count IS NULL);
+            WHEN 'S' THEN SET isGood = (city_Taxes_Collected IS NULL);
+        END CASE;
+
+        RETURN isGood;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER settlement_before_insert_trigger
+    BEFORE INSERT ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+        DECLARE isGood BOOLEAN;
+
+        SET isGood = settlement_check_type (new.settlement_Type,
+                                                new.city_Taxes_Collected,
+                                                new.stronghold_Garrison_Unit_Count);
+        IF (!isGood) THEN
+            signal SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Incorrect attribute values for settlement type';
+        END IF;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER settlement_before_update_trigger
+    BEFORE UPDATE ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+        DECLARE isGood BOOLEAN;
+
+        SET isGood = settlement_check_type (new.settlement_Type,
+                                                new.city_Taxes_Collected,
+                                                new.stronghold_Garrison_Unit_Count);
+        IF (!isGood) THEN
+            signal SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Incorrect attribute values for settlement type';
+        END IF;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER settlement_city_after_insert_trigger
+    AFTER INSERT ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+        IF new.settlement_Type = 'C' THEN
+            INSERT INTO CITY_MAT_VIEW
+                VALUE (new.settlement_Name, new.settlement_Population,
+                        new.controlled_By_Faction_Name,
+                        new.city_Taxes_Collected);
+        END IF;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER settlement_stronghold_after_insert_trigger
+    AFTER INSERT ON SETTLEMENT
+    FOR EACH ROW
+    BEGIN
+        IF new.settlement_Type = 'S' THEN
+            INSERT INTO STRONGHOLD_MAT_VIEW
+                VALUE (new.settlement_Name,
+                       new.settlement_Population,
+                        new.controlled_By_Faction_Name,
+                        new.stronghold_Garrison_Unit_Count);
+        END IF;
+    END $$
+DELIMITER ;
+
+DELIMITER $$
+ CREATE TRIGGER settlement_city_after_update_trigger
+     AFTER UPDATE ON SETTLEMENT
+     FOR EACH ROW
+     BEGIN  -- delete old row from city_mat_view, then insert new row
+
+        IF old.settlement_Type = 'C' THEN
+            DELETE FROM CITY_MAT_VIEW
+                WHERE CITY_MAT_VIEW.settlement_Name_Of_City = old.settlement_Name;
+        END IF;
+
+        IF new.settlement_Type = 'C' THEN
+            INSERT INTO CITY_MAT_VIEW
+                VALUE (new.settlement_Name,
+                        new.settlement_Population,
+                        new.controlled_By_Faction_Name,
+                        new.city_Taxes_Collected);
+            END IF;
+     END $$
+DELIMITER ;
+
+DELIMITER $$
+ CREATE TRIGGER settlement_stronghold_after_update_trigger
+     AFTER UPDATE ON SETTLEMENT
+     FOR EACH ROW
+     BEGIN  -- delete old row from stronghold_mat_view, then insert new row
+
+        IF old.settlement_Type = 'S' THEN
+            DELETE FROM STRONGHOLD_MAT_VIEW
+                WHERE STRONGHOLD_MAT_VIEW.settlement_Name_Of_Stronghold = old.settlement_Name;
+        END IF;
+
+        IF new.settlement_Type = 'S' THEN
+            INSERT INTO STRONGHOLD_MAT_VIEW
+                VALUE (new.settlement_Name,
+                        new.settlement_Population,
+                        new.controlled_By_Faction_Name,
+                       new.stronghold_Garrison_Unit_Count);
+            END IF;
+     END $$
+DELIMITER ;
+
+DELIMITER $$
+ CREATE TRIGGER settlement_city_before_delete_trigger
+     BEFORE DELETE ON SETTLEMENT
+     FOR EACH ROW
+     BEGIN  -- delete old row from city_mat_view
+         IF old.settlement_Name
+                IN (SELECT settlement_Name_Of_City FROM CITY_MAT_VIEW)
+             THEN
+             DELETE FROM CITY_MAT_VIEW
+             WHERE CITY_MAT_VIEW.settlement_Name_Of_City = old.settlement_Name;
+         END IF;
+     END $$
+DELIMITER ;
+
+DELIMITER $$
+ CREATE TRIGGER settlement_stronghold_before_delete_trigger
+     BEFORE DELETE ON SETTLEMENT
+     FOR EACH ROW
+     BEGIN  -- delete old row from stronghold_mat_view
+         IF old.settlement_Name
+                IN (SELECT settlement_Name_Of_Stronghold FROM STRONGHOLD_MAT_VIEW)
+             THEN
+             DELETE FROM STRONGHOLD_MAT_VIEW
+             WHERE STRONGHOLD_MAT_VIEW.settlement_Name_Of_Stronghold = old.settlement_Name;
+         END IF;
+     END $$
+DELIMITER ;
+
 
 CREATE TABLE SETTLEMENT_ROAD
 (
