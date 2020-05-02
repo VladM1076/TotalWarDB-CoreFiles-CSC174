@@ -511,6 +511,40 @@ DELIMITER $$
      END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER battled_after_insert_trigger
+    AFTER INSERT ON BATTLED
+    FOR EACH ROW
+    BEGIN
+		DECLARE force_1_letter char(1);
+		DECLARE force_2_letter char(1);
+
+		SET force_1_letter := (SELECT military_Force_Type FROM MILITARY_FORCE WHERE military_Force_Name = new.battling_Military_Force_Name_1);
+		SET force_2_letter := (SELECT military_Force_Type FROM MILITARY_FORCE WHERE military_Force_Name = new.battling_Military_Force_Name_2);
+		DECLARE valid BOOLEAN;
+
+        UPDATE MILITARY_FORCE 
+		SET navy_Ship_Count = (SELECT navy_Ship_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_1 AND force_1_letter = 'N') * (1 - (new.attacking_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
+			= new.battling_Military_Force_Name_1)),
+		SET navy_Ship_Count = (SELECT navy_Ship_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_2 AND force_2_letter = 'N') * (1 - (new.defending_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
+			= new.battling_Military_Force_Name_2)),
+		SET faction_Army_Cavalry_Count = (SELECT faction_Army_Cavalry_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_1 AND force_1_letter = 'A') * (1 - (new.attacking_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
+			= new.battling_Military_Force_Name_1)),
+		SET faction_Army_Cavalry_Count = (SELECT faction_Army_Cavalry_Count FROM MILITARY_FORCE WHERE  military_Force_Name = new.battling_Military_Force_Name_2 AND force_2_letter = 'A') * (1 - (new.defending_Military_Force_Name_Losses/(SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
+			= new.battling_Military_Force_Name_2)),
+		SET unitCount 
+		= (SELECT unitCount FROM MILITARY_FORCE WHERE military_Force_Name 
+			= new.battling_Military_Force_Name_1)- new.attacking_Military_Force_Name_Losses
+			WHERE military_Force_Name = battling_Military_Force_Name_1,
+		SET unitCount
+			= (SELECT unitCount FROM MILITARY_FORCE
+			WHERE military_Force_Name
+			= new.battling_Military_Force_Name_2) - new.defending_Military_Force_Name_Losses
+			WHERE military_Force_Name = battling_Military_Force_Name_2;
+			
+    END $$
+DELIMITER ;
+
 
 CREATE TABLE SETTLEMENT_ROAD
 (
