@@ -41,6 +41,60 @@ CREATE TABLE ALLIED
                 ON UPDATE CASCADE
 );
 
+CREATE TABLE SETTLEMENT
+(
+	settlement_Name VARCHAR(50) NOT NULL,
+	settlement_Population INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	city_Taxes_Collected INTEGER,
+	stronghold_Garrison_Unit_Count INTEGER,
+	settlement_Type CHAR NOT NULL,
+	CONSTRAINT faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+	CONSTRAINT settlement_Name_pk
+	    PRIMARY KEY (settlement_Name)
+);
+
+CREATE TABLE CITY_MAT_VIEW
+(
+	settlement_Name_Of_City VARCHAR(50) NOT NULL,
+	settlement_Population_Of_City INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	taxes_Collected INTEGER NOT NULL,
+	CONSTRAINT city_Faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+	CONSTRAINT settlement_Name_Of_City_pk
+	    PRIMARY KEY (settlement_Name_Of_City),
+	CONSTRAINT settlement_Name_Of_City_fk
+	    FOREIGN KEY (settlement_Name_Of_City)
+	        REFERENCES SETTLEMENT (settlement_Name)
+                ON UPDATE CASCADE
+);
+
+CREATE TABLE STRONGHOLD_MAT_VIEW
+(
+	settlement_Name_Of_Stronghold VARCHAR(50) NOT NULL,
+	settlement_Population_Of_Stronghold INT NOT NULL,
+	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
+	Garrison_Unit_Count_In_Stronghold INTEGER NOT NULL,
+	CONSTRAINT stronghold_Faction_Name_Controlling_Settlement_fk
+        FOREIGN KEY (controlled_By_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT Garrison_Unit_Count_In_Stronghold_exists
+        CHECK (Garrison_Unit_Count_In_Stronghold > 1),
+	CONSTRAINT settlement_Name_Of_Stronghold_pk
+	    PRIMARY KEY (settlement_Name_Of_Stronghold),
+	CONSTRAINT settlement_Name_Of_Stronghold_fk
+	    FOREIGN KEY (settlement_Name_Of_Stronghold)
+	        REFERENCES SETTLEMENT (settlement_Name)
+                ON UPDATE CASCADE
+);
+
 CREATE TABLE MILITARY_FORCE
 (
 	military_Force_Name VARCHAR(100) NOT NULL,
@@ -89,7 +143,7 @@ CREATE TABLE FACTION_ARMY_MAT_VIEW
 
 CREATE TABLE NAVY_MAT_VIEW
 (
-	navy_Military_Force_Name INT NOT NULL,
+	navy_Military_Force_Name VARCHAR(50) NOT NULL,
 	unit_Count INT,
 	morale SET ('eager', 'fair', 'poor'),
 	recruited_By_Faction_Name VARCHAR(50) NOT NULL,
@@ -111,11 +165,41 @@ CREATE TABLE NAVY_MAT_VIEW
                 ON UPDATE CASCADE
 );
 
+CREATE TABLE BATTLED
+(
+    battling_Military_Force_Name_1 VARCHAR(50) NOT NULL,
+    battling_Military_Force_Name_2 VARCHAR(50) NOT NULL,
+    victor_Faction_Name VARCHAR(50) NOT NULL,
+    attacker_Faction_Name VARCHAR(50) NOT NULL,
+    defender_Faction_Name VARCHAR(50) NOT NULL,
+    attacking_Military_Force_Name_Losses INT,
+    defending_Military_Force_Name_Losses INT,
+    CONSTRAINT battling_Military_Force_Name_1_fk
+        FOREIGN KEY (battling_Military_Force_Name_1)
+            REFERENCES MILITARY_FORCE (military_Force_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT battling_Military_Force_Name_2_fk
+        FOREIGN KEY (battling_Military_Force_Name_2)
+            REFERENCES MILITARY_FORCE (military_Force_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT victor_Faction_Name_fk
+        FOREIGN KEY (victor_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT attacker_Faction_Name_fk
+        FOREIGN KEY (attacker_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE,
+    CONSTRAINT defender_Faction_Name_fk
+        FOREIGN KEY (defender_Faction_Name)
+            REFERENCES FACTION (faction_Name)
+                ON UPDATE CASCADE
+);
 
 
 --  These triggers and functions update & synchronize the
---  FacArmyMatView & NavyMtView. There are also triggers that
---  enforce the disjoint between Navy & Faction_Army.
+--  MatView Tables. There are also triggers that
+--  enforce the disjoint for the tables.
 --  The identifying names and references are fairly descriptive.
 
 DELIMITER $$
@@ -271,95 +355,6 @@ DELIMITER $$
          END IF;
      END $$
 DELIMITER ;
-
-
-
-CREATE TABLE BATTLED
-(
-    battling_Military_Force_Name_1 VARCHAR(50) NOT NULL,
-    battling_Military_Force_Name_2 VARCHAR(50) NOT NULL,
-    victor_Faction_Name VARCHAR(50) NOT NULL,
-    attacker_Faction_Name VARCHAR(50) NOT NULL,
-    defender_Faction_Name VARCHAR(50) NOT NULL,
-    attacking_Military_Force_Name_Losses INT,
-    defending_Military_Force_Name_Losses INT,
-    CONSTRAINT battling_Military_Force_Name_1_fk
-        FOREIGN KEY (battling_Military_Force_Name_1)
-            REFERENCES MILITARY_FORCE (military_Force_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT battling_Military_Force_Name_2_fk
-        FOREIGN KEY (battling_Military_Force_Name_2)
-            REFERENCES MILITARY_FORCE (military_Force_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT victor_Faction_Name_fk
-        FOREIGN KEY (victor_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT attacker_Faction_Name_fk
-        FOREIGN KEY (attacker_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT defender_Faction_Name_fk
-        FOREIGN KEY (defender_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE
-);
-
-
-
-CREATE TABLE SETTLEMENT
-(
-	settlement_Name VARCHAR(50) NOT NULL,
-	settlement_Population INT NOT NULL,
-	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
-	city_Taxes_Collected INTEGER,
-	stronghold_Garrison_Unit_Count INTEGER,
-	settlement_Type CHAR NOT NULL,
-	CONSTRAINT faction_Name_Controlling_Settlement_fk
-        FOREIGN KEY (controlled_By_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-	CONSTRAINT settlement_Name_pk
-	    PRIMARY KEY (settlement_Name)
-);
-
-CREATE TABLE CITY_MAT_VIEW
-(
-	settlement_Name_Of_City VARCHAR(50) NOT NULL,
-	settlement_Population_Of_City INT NOT NULL,
-	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
-	taxes_Collected INTEGER NOT NULL,
-	CONSTRAINT city_Faction_Name_Controlling_Settlement_fk
-        FOREIGN KEY (controlled_By_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-	CONSTRAINT settlement_Name_Of_City_pk
-	    PRIMARY KEY (settlement_Name_Of_City),
-	CONSTRAINT settlement_Name_Of_City_fk
-	    FOREIGN KEY (settlement_Name_Of_City)
-	        REFERENCES SETTLEMENT (settlement_Name)
-                ON UPDATE CASCADE
-);
-
-CREATE TABLE STRONGHOLD_MAT_VIEW
-(
-	settlement_Name_Of_Stronghold VARCHAR(50) NOT NULL,
-	settlement_Population_Of_Stronghold INT NOT NULL,
-	controlled_By_Faction_Name VARCHAR(50) NOT NULL,
-	Garrison_Unit_Count_In_Stronghold INTEGER NOT NULL,
-	CONSTRAINT stronghold_Faction_Name_Controlling_Settlement_fk
-        FOREIGN KEY (controlled_By_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT Garrison_Unit_Count_In_Stronghold_exists
-        CHECK (Garrison_Unit_Count_In_Stronghold > 1),
-	CONSTRAINT settlement_Name_Of_Stronghold_pk
-	    PRIMARY KEY (settlement_Name_Of_Stronghold),
-	CONSTRAINT settlement_Name_Of_Stronghold_fk
-	    FOREIGN KEY (settlement_Name_Of_Stronghold)
-	        REFERENCES SETTLEMENT (settlement_Name)
-                ON UPDATE CASCADE
-);
 
 DELIMITER $$
 CREATE FUNCTION settlement_check_type (settlement_Type CHAR,
@@ -678,7 +673,7 @@ CREATE TABLE MINE
 
 
 
-/* triggers(before-inserts to be implemented)
+/* brainstorm triggers(before-inserts to be implemented)
 
 DELIMITER ;
 CREATE TRIGGER enforce_disjoint_militaryForce
@@ -720,4 +715,4 @@ END;
 DELIMITER
 
 
-/*
+*/
