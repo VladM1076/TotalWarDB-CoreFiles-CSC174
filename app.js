@@ -9,8 +9,8 @@ const NodeTable = require('nodetable');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '', 	//enter root PW here
-	database: ''	//enter DB here
+	password: '1379', 	//enter root PW here
+	database: 'totalwarmanager'	//enter DB here
 }
 );
 
@@ -172,6 +172,290 @@ app.get('/populateAllyTable', (req, res, next) => {
 	//const query = "SELECT * FROM users WHERE active = 1"
 	// NodeTable requires table's primary key to work properly
 	const primaryKey = "allied_Faction_Name_1"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateCityTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "settlement_Name_Of_City",
+		dt: 0
+    },
+    {
+		db: "taxes_Collected",
+		dt: 1
+    },
+    {
+		db: "settlement_Population_Of_City",
+		dt: 2
+    },
+    {
+		db: "controlled_By_Faction_Name",
+		dt: 3
+    }
+	];
+	// our database table name
+	const tableName = "CITY_MAT_VIEW"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "settlement_Name_Of_City"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateStrongholdTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "settlement_Name_Of_Stronghold",
+		dt: 0
+    },
+    {
+		db: "Garrison_Unit_Count_In_Stronghold",
+		dt: 1
+    },
+    {
+		db: "settlement_Population_Of_Stronghold",
+		dt: 2
+    },
+    {
+		db: "controlled_By_Faction_Name",
+		dt: 3
+    }
+	];
+	// our database table name
+	const tableName = "STRONGHOLD_MAT_VIEW"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "settlement_Name_Of_Stronghold"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateStratBuildingTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "built_By_Settlement_Name",
+		dt: 0
+    },
+    {
+		db: "strategic_Building_Name",
+		dt: 1
+    },
+    {
+		db: "structural_Integrity",
+		dt: 2
+    },
+    {
+		db: "smith_Type",
+		dt: 3
+    },
+    {
+		db: "food_Type",
+		dt: 4
+    },
+    {
+		db: "resource_Type",
+		dt: 5
+    },
+    {
+		db: "strategic_Building_Type",
+		dt: 6
+    }
+	];
+	// our database table name
+	const tableName = "STRATEGIC_BUILDING"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "built_By_Settlement_Name"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateArmyTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "faction_Army_Military_Force_Name",
+		dt: 0
+    },
+    {
+		db: "unit_Count",
+		dt: 1
+    },
+    {
+		db: "cavalry_Count",
+		dt: 2
+    },
+    {
+		db: "recruited_By_Faction_Name",
+		dt: 3
+    },
+    {
+		db: "garrisoned_At_Settlement_Name",
+		dt: 4
+    },
+    {
+		db: "morale",
+		dt: 5
+    }
+	];
+	// our database table name
+	const tableName = "FACTION_ARMY_MAT_VIEW"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "faction_Army_Military_Force_Name"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateNavyTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "navy_Military_Force_Name",
+		dt: 0
+    },
+    {
+		db: "unit_Count",
+		dt: 1
+    },
+    {
+		db: "ship_Count",
+		dt: 2
+    },
+    {
+		db: "recruited_By_Faction_Name",
+		dt: 3
+    },
+    {
+		db: "docked_At_Settlement_Name",
+		dt: 4
+    },
+    {
+		db: "morale",
+		dt: 5
+    }
+	];
+	// our database table name
+	const tableName = "NAVY_MAT_VIEW"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "navy_Military_Force_Name"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateBattleTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "battling_Military_Force_Name_1",
+		dt: 0
+    },
+    {
+		db: "attacking_Military_Force_Name_Losses",
+		dt: 1
+    },
+    {
+		db: "battling_Military_Force_Name_2",
+		dt: 2
+    },
+    {
+		db: "defending_Military_Force_Name_Losses",
+		dt: 3
+    },
+    {
+		db: "victor_Faction_Name",
+		dt: 4
+    }
+	];
+	// our database table name
+	const tableName = "BATTLED"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "battling_Military_Force_Name_1"
   
 	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
  
@@ -388,19 +672,12 @@ app.post('/addSmith', function(request, response){
 	var smithType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, smith_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, smith_Type, strategic_Building_Type) VALUES(?, ?, ? , ?, ?);';
 	
-	
-	if(request.body.good != null){
-		state = request.body.good;
-	}else if(request.body.damaged !=null){
-		state = request.body.damaged;
-	}else if(request.body.destroyed !=null){
-		state = request.body.destroyed;
-	}
+	state = request.body.int;
 	//if possible, 
 	if(state != null){
-		connection.query(query, [settlementName, bName, state, smithType], function(error, result, fields){
+		connection.query(query, [settlementName, bName, state, smithType, 'S'], function(error, result, fields){
 			if(error){
 				console.log(error);
 			}else{
@@ -420,19 +697,13 @@ app.post('/addMine', function(request, response){
 	var mineType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, resource_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, resource_Type, strategic_Building_Type) VALUES(?, ?, ? , ?, ?);';
 	
 	
-	if(request.body.good != null){
-		state = request.body.good;
-	}else if(request.body.damaged !=null){
-		state = request.body.damaged;
-	}else if(request.body.destroyed !=null){
-		state = request.body.destroyed;
-	}
+	state = request.body.int;
 	//if possible, 
 	if(state != null){
-		connection.query(query, [settlementName, bName, state, mineType], function(error, result, fields){
+		connection.query(query, [settlementName, bName, state, mineType, 'M'], function(error, result, fields){
 			if(error){
 				console.log(error);
 			}else{
@@ -452,19 +723,13 @@ app.post('/addFarm', function(request, response){
 	var farmType = request.body.type;
 	var state;
 	
-	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, food_Type) VALUES(?, ?, ? , ?);';
+	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, food_Type, strategic_Building_Type) VALUES(?, ?, ? , ?, ?);';
 	
 	
-	if(request.body.good != null){
-		state = request.body.good;
-	}else if(request.body.damaged !=null){
-		state = request.body.damaged;
-	}else if(request.body.destroyed !=null){
-		state = request.body.destroyed;
-	}
+	state = request.body.int;
 	//if possible, 
 	if(state != null){
-		connection.query(query, [settlementName, bName, state, farmType], function(error, result, fields){
+		connection.query(query, [settlementName, bName, state, farmType, 'F'], function(error, result, fields){
 			if(error){
 				console.log(error);
 			}else{
@@ -474,6 +739,7 @@ app.post('/addFarm', function(request, response){
 		}
 		);
 	}
+	response.redirect('/TotalWarManager');
 }
 );
 
@@ -580,8 +846,8 @@ app.post('/addBattle', function(request, response){
 	var defLoss = request.body.defloss;
 	var victor = request.body.victor;
 	
-	query = 'INSERT INTO BATTLED (battling_Military_Force_Name_1, battling_Military_Force_Name_2, victor_Faction_Name, attacking_Military_Force_Name_Losses, defending_Military_Force_Name_Losses, attacker_Faction_Name, defender_Faction_Name) VALUES(?,?,?,?,?,?,?);';
-	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss, armyName1, armyName2], function(error, result, fields){
+	query = 'INSERT INTO BATTLED (battling_Military_Force_Name_1, battling_Military_Force_Name_2, victor_Faction_Name, attacking_Military_Force_Name_Losses, defending_Military_Force_Name_Losses) VALUES(?,?,?,?,?);';
+	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
