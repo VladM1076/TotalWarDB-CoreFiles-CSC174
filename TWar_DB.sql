@@ -542,7 +542,7 @@ CREATE TRIGGER settlement_after_insert_trigger
     BEGIN
 		UPDATE Faction 
 			SET total_Faction_Population
-			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population;
+			= ((SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population) WHERE faction_Name = new.controlled_By_Faction_Name;
     END $$
 DELIMITER ;
 
@@ -554,10 +554,10 @@ CREATE TRIGGER settlement_after_update_trigger
     BEGIN
 		UPDATE Faction 
 			SET total_Faction_Population
-			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population;
+			= ((SELECT total_Faction_Population FROM Faction WHERE faction_Name = new.controlled_By_Faction_Name) + new.settlement_Population) WHERE faction_Name = new.controlled_By_Faction_Name;
 		UPDATE Faction 
 			SET total_Faction_Population
-			= (SELECT total_Faction_Population FROM Faction WHERE faction_Name = old.controlled_By_Faction_Name) - new.settlement_Population;
+			= ((SELECT total_Faction_Population FROM Faction WHERE faction_Name = old.controlled_By_Faction_Name) - new.settlement_Population) WHERE faction_Name = old.controlled_By_Faction_Name;
     END $$
 DELIMITER ;
 
