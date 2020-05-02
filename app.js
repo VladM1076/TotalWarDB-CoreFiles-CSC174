@@ -423,11 +423,11 @@ app.post('/addMine', function(request, response){
 	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, resource_Type) VALUES(?, ?, ? , ?);';
 	
 	
-	if(request.body.good != NULL){
+	if(request.body.good != null){
 		state = request.body.good;
-	}else if(request.body.damaged !=NULL){
+	}else if(request.body.damaged !=null){
 		state = request.body.damaged;
-	}else if(request.body.destroyed !=NULL){
+	}else if(request.body.destroyed !=null){
 		state = request.body.destroyed;
 	}
 	//if possible, 
@@ -455,15 +455,15 @@ app.post('/addFarm', function(request, response){
 	var query = 'INSERT INTO STRATEGIC_BUILDING (built_By_Settlement_Name, strategic_Building_Name, structural_Integrity, food_Type) VALUES(?, ?, ? , ?);';
 	
 	
-	if(request.body.good != NULL){
+	if(request.body.good != null){
 		state = request.body.good;
-	}else if(request.body.damaged !=NULL){
+	}else if(request.body.damaged !=null){
 		state = request.body.damaged;
-	}else if(request.body.destroyed !=NULL){
+	}else if(request.body.destroyed !=null){
 		state = request.body.destroyed;
 	}
 	//if possible, 
-	if(state != NULL){
+	if(state != null){
 		connection.query(query, [settlementName, bName, state, farmType], function(error, result, fields){
 			if(error){
 				console.log(error);
@@ -531,15 +531,16 @@ app.post('/removeRoad', function(request, response){
 }
 );
 
-app.post('addArmy', function(request, response){
+app.post('/addArmy', function(request, response){
 	var armyName = request.body.name;
 	var armyCount = request.body.numunit;
 	var armyHorseCount = request.body.numhorse;
 	var controllingFaction = request.body.cfact;
 	var numOfGarrisoned = request.body.gar;
+	var state = request.body.morale;
 	
-	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, faction_Army_Cavalry_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name) VALUES(?,?,?,?,?);';
-	connection.query(query, [armyName, armyCount, armyHorseCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
+	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, faction_Army_Cavalry_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name, military_Force_Type, morale) VALUES(?,?,?,?,?,?,?);';
+	connection.query(query, [armyName, armyCount, armyHorseCount, controllingFaction, numOfGarrisoned, 'A', state], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
@@ -557,9 +558,10 @@ app.post('/addNavy', function(request, response){
 	var navyShipCount = request.body.numship;
 	var controllingFaction = request.body.cfact;
 	var numOfGarrisoned = request.body.gar;
+	var state = request.body.morale;
 	
-	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, navy_Ship_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name) VALUES(?,?,?,?,?);';
-	connection.query(query, [navyName, navyCount, navyShipCount, controllingFaction, numOfGarrisoned], function(error, result, fields){
+	query = 'INSERT INTO MILITARY_FORCE (military_Force_Name, unit_Count, navy_Ship_Count, recruited_By_Faction_Name, garrisoned_At_Settlement_Name, military_Force_Type, morale) VALUES(?,?,?,?,?,?,?);';
+	connection.query(query, [navyName, navyCount, navyShipCount, controllingFaction, numOfGarrisoned, 'N', state], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
@@ -578,8 +580,8 @@ app.post('/addBattle', function(request, response){
 	var defLoss = request.body.defloss;
 	var victor = request.body.victor;
 	
-	query = 'INSERT INTO BATTLED (battling_Military_Force_Name_1, battling_Military_Force_Name_2, victor_Faction_Name, attacking_Military_Force_Name_Losses, defending_Military_Force_Name_Losses) VALUES(?,?,?,?,?);';
-	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss], function(error, result, fields){
+	query = 'INSERT INTO BATTLED (battling_Military_Force_Name_1, battling_Military_Force_Name_2, victor_Faction_Name, attacking_Military_Force_Name_Losses, defending_Military_Force_Name_Losses, attacker_Faction_Name, defender_Faction_Name) VALUES(?,?,?,?,?,?,?);';
+	connection.query(query, [armyName1, armyName2, victor, attLoss, defLoss, armyName1, armyName2], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
@@ -612,7 +614,7 @@ app.post('/updateMorale', function(request, response){
 	var state = request.body.morale;
 	
 	query = 'UPDATE MILITARY_FORCE SET morale = ? WHERE military_Force_Name = ?;';
-	if(state != NULL && forceName != NULL){
+	if(state != null && forceName != null){
 		connection.query(query, [state, forceName], function(error, result, fields){
 			if(error) throw error;
 			//if(getstate = null) then write to screen that something needs to be entered
