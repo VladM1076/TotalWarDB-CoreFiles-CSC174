@@ -9,8 +9,8 @@ const NodeTable = require('nodetable');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '1379', 	//enter root PW here
-	database: 'totalwarmanager'	//enter DB here
+	password: 'admin', 	//enter root PW here
+	database: 'totalwardb'	//enter DB here
 }
 );
 
