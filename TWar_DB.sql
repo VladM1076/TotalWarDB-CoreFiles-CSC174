@@ -170,8 +170,6 @@ CREATE TABLE BATTLED
     battling_Military_Force_Name_1 VARCHAR(50) NOT NULL,
     battling_Military_Force_Name_2 VARCHAR(50) NOT NULL,
     victor_Faction_Name VARCHAR(50) NOT NULL,
-    attacker_Faction_Name VARCHAR(50) NOT NULL,
-    defender_Faction_Name VARCHAR(50) NOT NULL,
     attacking_Military_Force_Name_Losses INT,
     defending_Military_Force_Name_Losses INT,
     CONSTRAINT battling_Military_Force_Name_1_fk
@@ -185,17 +183,8 @@ CREATE TABLE BATTLED
     CONSTRAINT victor_Faction_Name_fk
         FOREIGN KEY (victor_Faction_Name)
             REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT attacker_Faction_Name_fk
-        FOREIGN KEY (attacker_Faction_Name)
-            REFERENCES FACTION (faction_Name)
-                ON UPDATE CASCADE,
-    CONSTRAINT defender_Faction_Name_fk
-        FOREIGN KEY (defender_Faction_Name)
-            REFERENCES FACTION (faction_Name)
                 ON UPDATE CASCADE
 );
-
 
 --  These triggers and functions update & synchronize the
 --  MatView Tables. There are also triggers that
