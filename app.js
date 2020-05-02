@@ -4,13 +4,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require ('path');
 var app = express();
+const NodeTable = require('nodetable');
 
-
-var db = mysql.createConnection({
+var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '1379', 	//enter root PW here
-	database: 'TotalWarDB'
+	password: '', 	//enter root PW here
+	database: ''
 }
 );
 
@@ -361,6 +361,7 @@ app.post('/addFarm', function(request, response){
 		}
 		);
 	}
+}
 );
 
 app.post('/updateOwnership', function(request, response){
