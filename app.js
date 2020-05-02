@@ -9,8 +9,8 @@ const NodeTable = require('nodetable');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: '', 	//enter your root PW here
-	database: ''	//enter your DB here
+	password: '1379', 	//enter root PW here
+	database: 'TotalWarDB'
 }
 );
 
@@ -80,15 +80,6 @@ app.get('/populateFactionTable', (req, res, next) => {
 app.get('/populateRoadTable', (req, res, next) => {
 
     const requestQuery = req.query;
-	/**
-	* This is array of objects which maps 
-	* the database columns with the Datatables columns
-	* db - represents the exact name of the column in your table
-	* dt - represents the order in which you want to display your fetched values
-	* If your want any column to display in your datatable then
-	* you have to put an enrty in the array , in the specified format
-	* carefully setup this structure to avoid any errors
-	*/
 	let columnsMap = [
     {
 		db: "road_Between_Settlement_Name_1",
@@ -113,6 +104,74 @@ app.get('/populateRoadTable', (req, res, next) => {
 	//const query = "SELECT * FROM users WHERE active = 1"
 	// NodeTable requires table's primary key to work properly
 	const primaryKey = "road_Between_Settlement_Name_1"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateWarTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "warring_Faction_Name_1",
+		dt: 0
+    },
+    {
+		db: "warring_Faction_Name_2",
+		dt: 1
+    }
+	];
+	// our database table name
+	const tableName = "AT_WAR"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "warring_Faction_Name_1"
+  
+	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
+ 
+	nodeTable.output((err, data)=>{
+		if (err) {
+			console.log(err);
+			return;
+		}
+		// Directly send this data as output to Datatable
+		res.send(data)
+		return;
+	})
+	
+});
+
+app.get('/populateAllyTable', (req, res, next) => {
+
+    const requestQuery = req.query;
+	let columnsMap = [
+    {
+		db: "allied_Faction_Name_1",
+		dt: 0
+    },
+    {
+		db: "allied_Faction_Name_2",
+		dt: 1
+    }
+	];
+	// our database table name
+	const tableName = "ALLIED"
+	// Custome SQL query
+	//const query = "SELECT * FROM users WHERE active = 1"
+	// NodeTable requires table's primary key to work properly
+	const primaryKey = "allied_Faction_Name_1"
   
 	const nodeTable = new NodeTable(requestQuery, connection, tableName, primaryKey, columnsMap);
  
@@ -289,9 +348,8 @@ app.post('/addCity', function(request, response){
 	var cityPopulation = request.body.cpop;
 	var cityFaction = request.body.cfact;
 	var cityTax = request.body.ctax;
-	var date = request.body.date;
-	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, city_Taxes_Collected, controlled_By_Faction_Name, faction_Date_Settlement_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);'; 		//column names might need updating depending on SQL table
-	connection.query(query, [cityName, cityPopulation, cityTax, cityFaction, date, 'C'], function(error, result, fields){
+	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, city_Taxes_Collected, controlled_By_Faction_Name, settlement_Type) VALUES(?, ?, ? , ?, ?);'; 		//column names might need updating depending on SQL table
+	connection.query(query, [cityName, cityPopulation, cityTax, cityFaction, 'C'], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
@@ -310,8 +368,8 @@ app.post('/addStronghold', function(request, response){
 	var strongholdPop = request.body.spop;
 	var controllingFac = request.body.cfact;
 	var date = request.body.date;
-	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, stronghold_Garrison_Unit_Count, controlled_By_Faction_Name, faction_Date_Settlement_Occupied, settlement_Type) VALUES(?, ?, ? , ?, ? , ?);';		//column names might need updating depending on SQL table
-	connection.query(query, [strongholdName, strongholdPop, numOfGar, controllingFac, date, 'S'], function(error, result, fields){
+	var query = 'INSERT INTO SETTLEMENT (settlement_Name, settlement_Population, stronghold_Garrison_Unit_Count, controlled_By_Faction_Name, settlement_Type) VALUES(?, ?, ? , ? , ?);';		//column names might need updating depending on SQL table
+	connection.query(query, [strongholdName, strongholdPop, numOfGar, controllingFac, 'S'], function(error, result, fields){
 		if(error){
 			console.log(error);
 		}else{
