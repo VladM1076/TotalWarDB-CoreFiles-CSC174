@@ -669,6 +669,31 @@
 					
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Strategic Building Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="stratBuildingTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Located in Settlement</th>
+										  <th>Building Name</th>
+										  <th>Structural Integrity</th>
+										  <th>Smith Type</th>
+										  <th>Food Type</th>
+										  <th>Resource Type</th>
+										  <th>Building Type</th>
+										</tr>
+									</thead>
+									
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">Road Table</h6>
 						</div>
 						<div class="card-body">
@@ -728,6 +753,29 @@
 										  <th>Controlled by</th>
 										  <th>Location</th>
 										  <th>Morale</th>
+										</tr>
+									</thead>
+									
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Battle Table</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="battleTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+										  <th>Attacking Army</th>
+										  <th>Attacker Losses</th>
+										  <th>Defending Army</th>
+										  <th>Defender Losses</th>
+										  <th>Victor</th>
 										</tr>
 									</thead>
 									
@@ -819,6 +867,66 @@
 			"processing": true,
 			"serverSide": true,
 			'ajax': "/populateAllyTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#cityTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateCityTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#strongholdTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateStrongholdTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#armyTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateArmyTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#navyTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateNavyTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#battleTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateBattleTable"
+		});
+	});
+	
+	$(document).ready(function () {
+		$('#stratBuildingTable').DataTable({
+			"paging": true,
+			"pageLength": 10,
+			"processing": true,
+			"serverSide": true,
+			'ajax': "/populateStratBuildingTable"
 		});
 	});
 	</script>
