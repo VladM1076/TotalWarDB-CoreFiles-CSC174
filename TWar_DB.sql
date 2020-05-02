@@ -111,15 +111,6 @@ CREATE TABLE NAVY_MAT_VIEW
                 ON UPDATE CASCADE
 );
 
-/*		Here are the triggers im having a some errors with. I think that I have the idea and structure correct for them,
-		but am having some syntax errors come up. I would greatly appreciate it If I could get some help with these triggers.
-		These triggers synchronize the data between 'Military_Force' and 'Faction_Army_Mat_View' & 'Navy_Mat_View'.
-		If we can figure out the errors for these triggers, then we can replicate the solution for Materialized views between
-		Settlement and City & Stronghold materialized views. And between Strategic Building and Blacksmith & Farm & Mine
-		materialized views. 
-
-		There are wayyyy more triggers than I first anticipated. Anyways, here are the trigger templates:
-
 DELIMITER $$
 CREATE FUNCTION military_force_check_type (military_Force_Type CHAR,
                                            faction_Army_Cavalry_Count INT,
@@ -138,7 +129,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE TRIGGER military_force_before_insert_trigger
-    BEFORE INSERT ON TWar_DB_V4.MILITARY_FORCE
+    BEFORE INSERT ON MILITARY_FORCE
     FOR EACH ROW
     BEGIN
         DECLARE isGood BOOLEAN;
@@ -155,7 +146,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE TRIGGER military_force_before_update_trigger
-    BEFORE UPDATE ON TWar_DB_V4.MILITARY_FORCE
+    BEFORE UPDATE ON MILITARY_FORCE
     FOR EACH ROW
     BEGIN
         DECLARE isGood BOOLEAN;
@@ -172,11 +163,11 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE TRIGGER military_force_faction_army_insert_after_trigger
-    AFTER INSERT ON TWar_DB_V4.MILITARY_FORCE
+    AFTER INSERT ON MILITARY_FORCE
     FOR EACH ROW
     BEGIN
         IF new.military_Force_Type = 'A' THEN
-            INSERT INTO TWar_DB_V4.FACTION_ARMY_MAT_VIEW
+            INSERT INTO FACTION_ARMY_MAT_VIEW
                 value (new.military_Force_Name, new.faction_Army_Cavalry_Count,
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
@@ -187,11 +178,11 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE TRIGGER military_force_navy_insert_after_trigger
-    AFTER INSERT ON TWar_DB_V4.MILITARY_FORCE
+    AFTER INSERT ON MILITARY_FORCE
     FOR EACH ROW
     BEGIN
         IF new.military_Force_Type = 'N' THEN
-            INSERT INTO TWar_DB_V4.NAVY_MAT_VIEW
+            INSERT INTO NAVY_MAT_VIEW
                 VALUE (new.military_Force_Name,
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
@@ -203,17 +194,17 @@ DELIMITER ;
 
 DELIMITER $$
  CREATE TRIGGER faction_army_military_force_update_after_trigger
-     AFTER UPDATE ON TWar_DB_V4.MILITARY_FORCE
+     AFTER UPDATE ON MILITARY_FORCE
      FOR EACH ROW
      BEGIN  -- delete old row from faction_army_mat_view, then insert new row
 
         IF old.military_Force_Type = 'A' THEN
-            DELETE FROM TWar_DB_V4.FACTION_ARMY_MAT_VIEW
+            DELETE FROM FACTION_ARMY_MAT_VIEW
                 WHERE FACTION_ARMY_MAT_VIEW.faction_Army_Military_Force_Name = old.military_Force_Name;
         END IF;
 
         IF new.military_Force_Type = 'A' THEN
-            INSERT INTO TWar_DB_V4.FACTION_ARMY_MAT_VIEW
+            INSERT INTO FACTION_ARMY_MAT_VIEW
                 VALUE (new.military_Force_Name,
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
@@ -225,17 +216,17 @@ DELIMITER ;
 
 DELIMITER $$
  CREATE TRIGGER navy_military_force_update_after_trigger
-     AFTER UPDATE ON TWar_DB_V4.MILITARY_FORCE
+     AFTER UPDATE ON MILITARY_FORCE
      FOR EACH ROW
      BEGIN  -- delete old row from navy_mat_view, then insert new row
 
         IF old.military_Force_Type = 'N' THEN
-            DELETE FROM TWar_DB_V4.NAVY_MAT_VIEW
+            DELETE FROM NAVY_MAT_VIEW
                 WHERE NAVY_MAT_VIEW.navy_Military_Force_Name = old.military_Force_Name;
         END IF;
 
         IF new.military_Force_Type = 'N' THEN
-            INSERT INTO TWar_DB_V4.NAVY_MAT_VIEW
+            INSERT INTO NAVY_MAT_VIEW
                 VALUE (new.military_Force_Name,
                         new.unit_Count, new.morale,
                         new.recruited_By_Faction_Name,
@@ -247,13 +238,13 @@ DELIMITER ;
 
 DELIMITER $$
  CREATE TRIGGER faction_army_military_force_before_delete_trigger
-     BEFORE DELETE ON TWar_DB_V4.MILITARY_FORCE
+     BEFORE DELETE ON MILITARY_FORCE
      FOR EACH ROW
      BEGIN  -- delete old row from faction_army_mat_view
          IF old.military_Force_Name
                 IN (SELECT faction_Army_Military_Force_Name FROM FACTION_ARMY_MAT_VIEW)
              THEN
-             DELETE FROM TWar_DB_V4.FACTION_ARMY_MAT_VIEW
+             DELETE FROM FACTION_ARMY_MAT_VIEW
              WHERE FACTION_ARMY_MAT_VIEW.faction_Army_Military_Force_Name = old.military_Force_Name;
          END IF;
      END $$
@@ -261,19 +252,20 @@ DELIMITER ;
 
 DELIMITER $$
  CREATE TRIGGER navy_military_force_before_delete_trigger
-     BEFORE DELETE ON TWar_DB_V4.MILITARY_FORCE
+     BEFORE DELETE ON MILITARY_FORCE
      FOR EACH ROW
      BEGIN  -- delete old row from navy_mat_view
          IF old.military_Force_Name
                 IN (SELECT navy_Military_Force_Name FROM NAVY_MAT_VIEW)
              THEN
-             DELETE FROM TWar_DB_V4.NAVY_MAT_VIEW
+             DELETE FROM NAVY_MAT_VIEW
              WHERE NAVY_MAT_VIEW.navy_Military_Force_Name = old.military_Force_Name;
          END IF;
      END $$
 DELIMITER ;
 
-*/
+
+
 
 CREATE TABLE BATTLED
 (
@@ -371,42 +363,6 @@ CREATE TABLE SETTLEMENT_ROAD
                 ON UPDATE CASCADE
 );
 
-/*
-CREATE TABLE CONTROLS
-(
-    fName VARCHAR(50) NOT NULL,
-    sName VARCHAR(50) NOT NULL,
-    date_Occupied DATE,
-    CONSTRAINT Cont_fName_sName_pk
-        PRIMARY KEY (fName, sName),
-    CONSTRAINT F_Cont_fName_fk
-        FOREIGN KEY (fName)
-            REFERENCES FACTION (fName)
-                ON UPDATE CASCADE,
-    CONSTRAINT S_Cont_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES SETTLEMENT (sName)
-                ON UPDATE CASCADE
-);
-*/
-
-/*
-CREATE TABLE GARRISON
-(
-    sName VARCHAR(50) NOT NULL,
-    mID INT NOT NULL,
-    CONSTRAINT Gar_sName_mID_pk
-        PRIMARY KEY (sName, mID),
-    CONSTRAINT S_Gar_sName_fk
-        FOREIGN KEY (sName)
-            REFERENCES SETTLEMENT (sName)
-                ON UPDATE CASCADE,
-    CONSTRAINT MF_Gar_mID_fk
-        FOREIGN KEY (mID)
-            REFERENCES MILITARY_FORCE (mID)
-                ON UPDATE CASCADE
-);
- */
 
 CREATE TABLE STRATEGIC_BUILDING
 (
